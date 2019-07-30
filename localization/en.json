@@ -1,0 +1,11 @@
+{
+  "loginScreenHeader": "Login",
+  "loginScreenUsernameLabel": "Username",
+  "loginScreenPasswordLabel": "Password",
+  "loginScreenLoginButton": "Login",
+  "loginScreenErrorDialogTitle": "Error",
+  "loginScreenUnknownError": "Unexpected error occurred while logging in",
+  "loginScreenWrongInfo": "Wrong login info",
+  "logoutText": "Logout",
+  "cancelButtonText": "Cancel"
+}
