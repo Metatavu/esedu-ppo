@@ -1,5 +1,4 @@
-import LocalizedStrings, { LocalizedStringsMethods } from 'localized-strings';
-
+import LocalizedStrings, { LocalizedStringsMethods } from "localized-strings";
 
 export interface Strings extends LocalizedStringsMethods {
   loginScreenHeader: string,
@@ -15,7 +14,7 @@ export interface Strings extends LocalizedStringsMethods {
 
 const strings: Strings = new LocalizedStrings({
   en: require("./en.json"),
-  fi: require("./fi.json")
+  fi: require("./fi.json"),
 });
 
 export default strings;

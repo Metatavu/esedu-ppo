@@ -31,14 +31,14 @@ class AuthRefresh extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      eventData: { }
+      eventData: { },
     };
   }
 
   /**
    * Component did mount life-cycle event
    */
-  componentDidMount() {
+  public componentDidMount() {
     this.timer = setInterval(async () => {
       if (!this.props.accessToken) {
         return;
@@ -57,7 +57,7 @@ class AuthRefresh extends React.Component<Props, State> {
   /**
    * Component will unmount life-cycle event
    */
-  componentWillUnmount() {
+  public componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -66,7 +66,7 @@ class AuthRefresh extends React.Component<Props, State> {
   /**
    * Component render method
    */
-  render() {
+  public render() {
     return null;
   }
 }
@@ -78,7 +78,7 @@ class AuthRefresh extends React.Component<Props, State> {
  */
 function mapStateToProps(state: StoreState) {
   return {
-    accessToken: state.accessToken
+    accessToken: state.accessToken,
   };
 }
 
@@ -89,7 +89,7 @@ function mapStateToProps(state: StoreState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
-    onAccessTokenUpdate: (accessToken: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken))
+    onAccessTokenUpdate: (accessToken: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken)),
   };
 }
 

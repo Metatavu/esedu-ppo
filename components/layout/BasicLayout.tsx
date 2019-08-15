@@ -20,8 +20,7 @@ export default class BasicLayout extends React.Component<Props, State> {
     this.state = {};
   }
 
-  render() {
-
+  public render() {
     if (this.props.loading) {
       return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
@@ -32,17 +31,17 @@ export default class BasicLayout extends React.Component<Props, State> {
 
     const styles = StyleSheet.create({
       container: {
-        backgroundColor: this.props.backgroundColor
-      }
+        backgroundColor: this.props.backgroundColor,
+      },
     });
 
     const content = this.props.backgroundImage ? (
       <Container style={styles.container}>
-        <ImageBackground source={this.props.backgroundImage} style={{width: '100%', height: '100%'}}>
+        <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%"}}>
           <Content>
             {this.props.children}
           </Content>
-          {this.props.footerContent && 
+          {this.props.footerContent &&
             <Footer>
               {this.props.footerContent}
             </Footer>
@@ -54,7 +53,7 @@ export default class BasicLayout extends React.Component<Props, State> {
         <Content>
           {this.props.children}
         </Content>
-        {this.props.footerContent && 
+        {this.props.footerContent &&
           <Footer>
             {this.props.footerContent}
           </Footer>

@@ -1,6 +1,6 @@
-import { AppAction } from '../actions';
-import { StoreState } from '../types';
-import { ACCESS_TOKEN_UPDATE, LOCALE_UPDATE } from '../constants';
+import { AppAction } from "../actions";
+import { StoreState } from "../types";
+import { ACCESS_TOKEN_UPDATE, LOCALE_UPDATE, MOODLE_TOKEN_UPDATE } from "../constants";
 
 /**
  * Reducer function
@@ -11,10 +11,12 @@ import { ACCESS_TOKEN_UPDATE, LOCALE_UPDATE } from '../constants';
 export function reducer(storeState: StoreState, action: AppAction): StoreState {
   switch (action.type) {
     case ACCESS_TOKEN_UPDATE:
-      //const accessToken = action.accessToken;
+      // const accessToken = action.accessToken;
       return storeState;
     case LOCALE_UPDATE:
       return {...storeState, locale: action.locale};
+    case MOODLE_TOKEN_UPDATE:
+      return {...storeState, moodleToken: action.moodleToken};
   }
 
   return storeState;
