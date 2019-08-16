@@ -7,5 +7,6 @@
   "loginScreenUnknownError": "Unexpected error occurred while logging in",
   "loginScreenWrongInfo": "Wrong login info",
   "logoutText": "Logout",
-  "cancelButtonText": "Cancel"
+  "cancelButtonText": "Cancel",
+  "quizScreenErrorText": "Error occured while getting quizes"
 }

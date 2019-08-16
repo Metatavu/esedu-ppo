@@ -2,8 +2,8 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   screenHeader: {
-    backgroundColor: "#2AA255", 
-    color: "#FFF", 
+    backgroundColor: "#2AA255",
+    color: "#FFF",
     width: "100%",
     paddingTop: 15,
     paddingBottom: 15,
@@ -37,10 +37,10 @@ export default StyleSheet.create({
     paddingRight: 15
   },
   datePickerContainer: {
-    alignItems: "center", 
-    alignContent: "center", 
-    justifyContent: "space-between", 
-    marginTop: 10, 
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "space-between",
+    marginTop: 10,
     marginBottom: 10
   }
 });

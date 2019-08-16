@@ -1,5 +1,4 @@
-import LocalizedStrings, { LocalizedStringsMethods } from 'localized-strings';
-
+import LocalizedStrings, { LocalizedStringsMethods } from "localized-strings";
 
 export interface Strings extends LocalizedStringsMethods {
   loginScreenHeader: string,
@@ -10,7 +9,8 @@ export interface Strings extends LocalizedStringsMethods {
   loginScreenUnknownError: string,
   loginScreenWrongInfo: string,
   logoutText: string,
-  cancelButtonText: string
+  cancelButtonText: string,
+  quizScreenErrorText: string
 }
 
 const strings: Strings = new LocalizedStrings({

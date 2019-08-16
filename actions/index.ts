@@ -1,5 +1,5 @@
-import * as constants from '../constants';
-import { AccessToken } from '../types';
+import * as constants from "../constants";
+import { AccessToken } from "../types";
 
 /**
  * Access token update data
@@ -18,9 +18,17 @@ export interface LocaleUpdate {
 }
 
 /**
+ * Moodle token update data
+ */
+export interface MoodleTokenUpdate {
+  type: constants.MOODLE_TOKEN_UPDATE,
+  moodleToken?: string
+}
+
+/**
  * Actions
  */
-export type AppAction =  AccessTokenUpdate | LocaleUpdate;
+export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate;
 
 /**
  * Store update method for access token
@@ -30,7 +38,19 @@ export type AppAction =  AccessTokenUpdate | LocaleUpdate;
 export function accessTokenUpdate(accessToken?: AccessToken): AccessTokenUpdate {
   return {
     type: constants.ACCESS_TOKEN_UPDATE,
-    accessToken: accessToken
+    accessToken
+  }
+}
+
+/**
+ * Store update method for moodle token
+ * 
+ * @param moodleToken moodle token
+ */
+export function moodleTokenUpdate(moodleToken?: string): MoodleTokenUpdate {
+  return{
+    type: constants.MOODLE_TOKEN_UPDATE,
+    moodleToken
   }
 }
 
@@ -42,6 +62,6 @@ export function accessTokenUpdate(accessToken?: AccessToken): AccessTokenUpdate 
 export function localeUpdate(locale: string): LocaleUpdate {
   return {
     type: constants.LOCALE_UPDATE,
-    locale: locale
+    locale
   }
 }

@@ -46,6 +46,53 @@ class TopBar extends React.Component<Props, State> {
   }
 
   /**
+   * Component render method
+   */
+  public render() {
+    return (
+      <View style={{flex: 1}}>
+        <View style={{height: 50}}>
+          <View style={{flex: 1, flexDirection: "row", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
+
+            {this.props.showMenu &&
+              <TouchableHighlight onPress={this.toggleLocale} style={{paddingLeft: 10}}>
+                <Text style={{color: this.props.textColor || "#fff"}}>{this.props.locale === "fi" ? "In english" : "Suomeksi"}</Text>
+              </TouchableHighlight>
+            }
+
+            {this.props.showHeader &&
+              <Text style={this.props.header &&
+                 this.props.header.length > 20 ?
+                 { fontSize: 18, color: this.props.textColor || "#fff"} : { fontSize: 25, color: this.props.textColor || "#fff"}}>{this.props.header}</Text>
+            }
+
+            {this.props.showUser &&
+              <TouchableHighlight style={{paddingRight: 10}}>
+                <Text style={{color: this.props.textColor || "#fff"}}>
+                  {this.props.accessToken ? this.props.accessToken.firstName + " " + this.props.accessToken.lastName : ""}
+                </Text>
+              </TouchableHighlight>
+            }
+
+            {this.props.showCancel &&
+              <Text onPress={() => this.props.navigation
+              .reset([NavigationActions.navigate({routeName: "Main"})], 0)} style={{color: this.props.textColor || "#fff"}}>
+                {strings.cancelButtonText}
+              </Text>
+            }
+
+            {this.props.showLogout &&
+              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "#fff"}}>
+                {strings.logoutText}
+              </Text>
+            }
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  /**
    * Toggles selected language
    */
   private toggleLocale = () => {
@@ -59,61 +106,16 @@ class TopBar extends React.Component<Props, State> {
     }
   }
 
-    /**
+  /**
    * Logout function
    */
-  private logOut = () => {
-    
+  private logout = () => {
     this.props.onAccessTokenUpdate(undefined)
     const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Login' })],
+      actions: [NavigationActions.navigate({ routeName: "Login" })]
     });
     this.props.navigation.dispatch(resetAction);
-  }
-
-  /**
-   * Component render method
-   */
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <View style={{height: 50}}>
-          <View style={{flex: 1, flexDirection: "row", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
-            
-            {this.props.showMenu &&
-              <TouchableHighlight onPress={this.toggleLocale} style={{paddingLeft: 10}}>
-                <Text style={{color: this.props.textColor || '#fff'}}>{this.props.locale === "fi" ? "In english" : "Suomeksi"}</Text>
-              </TouchableHighlight>
-            }
-
-            {this.props.showHeader && 
-              <Text style={this.props.header && this.props.header.length > 20 ? { fontSize: 18, color: this.props.textColor || '#fff'} : { fontSize: 25, color: this.props.textColor || '#fff'}}>{this.props.header}</Text>
-            }
-
-            {this.props.showUser && 
-              <TouchableHighlight style={{paddingRight: 10}}>
-                <Text style={{color: this.props.textColor || '#fff'}}>
-                  {this.props.accessToken ? this.props.accessToken.firstName + ' ' + this.props.accessToken.lastName : ''}
-                </Text>
-              </TouchableHighlight>
-            }
-            
-            {this.props.showCancel && 
-              <Text onPress={()=>this.props.navigation.reset([NavigationActions.navigate({routeName: "Main"})], 0)} style={{color: this.props.textColor || '#fff'}}>
-                {strings.cancelButtonText}
-              </Text>
-            }
-
-            {this.props.showLogout && 
-              <Text onPress={()=> this.logOut()} style={{color: this.props.textColor || '#fff'}}>
-                {strings.logoutText}
-              </Text>
-            }  
-          </View>
-        </View>
-      </View>
-    );
   }
 }
 
