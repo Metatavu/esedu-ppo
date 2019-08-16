@@ -14,7 +14,9 @@ interface Props {
 /**
  * Component state
  */
-interface State {};
+interface State {
+
+};
 
 /**
  * Component for keeping authentication token fresh
@@ -38,7 +40,7 @@ class AuthRefresh extends React.Component<Props, State> {
   /**
    * Component did mount life-cycle event
    */
-  componentDidMount() {
+  public componentDidMount() {
     this.timer = setInterval(async () => {
       if (!this.props.accessToken) {
         return;
@@ -57,7 +59,7 @@ class AuthRefresh extends React.Component<Props, State> {
   /**
    * Component will unmount life-cycle event
    */
-  componentWillUnmount() {
+  public componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
     }
@@ -66,7 +68,7 @@ class AuthRefresh extends React.Component<Props, State> {
   /**
    * Component render method
    */
-  render() {
+  public render() {
     return null;
   }
 }

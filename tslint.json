@@ -1,0 +1,49 @@
+{
+    "extends": "tslint:recommended",
+    "defaultSeverity": "warning",
+    "rules": {
+        "object-literal-sort-keys": false,
+        "ordered-imports": false,
+        "interface-name": false,
+        "semicolon": false,
+        "no-trailing-whitespace": {
+          "options" : [
+            "ignore-comments"
+          ]
+        },
+        "member-ordering": {
+          "options" : {
+            "order": "fields-first"
+          }
+        },
+        "max-line-length": {
+          "options" : {
+            "limit": 160
+          }
+        },
+        "one-line":{
+          "options": [
+            "check-catch",
+            "check-finally",
+            "check-open-brace",
+            "check-whitespace"
+        ]
+        },
+        "no-empty-interface": false,
+        "jsdoc-format": false,
+        "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+        "import-spacing": true,
+        "no-unused-variable": true
+    },
+    "linterOptions": {
+      "exclude": [
+        "config/**/*.js",
+        "node_modules/**/*.ts",
+        "coverage/lcov-report/*.js"
+      ]
+    },
+    
+    "jsRules": {
+        "no-empty": true
+    }
+}
