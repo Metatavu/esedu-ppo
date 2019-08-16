@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Content, Footer, Spinner } from "native-base";
 import { StyleSheet, View, ImageBackground } from "react-native";
 
-export interface Props {
+interface Props {
   backgroundColor: string,
   backgroundImage?: any
   footerContent?: JSX.Element
@@ -15,11 +15,19 @@ interface State {
 
 export default class BasicLayout extends React.Component<Props, State> {
 
+  /**
+   * Constructor
+   * 
+   * @param props 
+   */
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
+  /**
+   * Component render method
+   */
   public render() {
     if (this.props.loading) {
       return (
@@ -31,8 +39,8 @@ export default class BasicLayout extends React.Component<Props, State> {
 
     const styles = StyleSheet.create({
       container: {
-        backgroundColor: this.props.backgroundColor,
-      },
+        backgroundColor: this.props.backgroundColor
+      }
     });
 
     const content = this.props.backgroundImage ? (

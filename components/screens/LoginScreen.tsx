@@ -1,10 +1,8 @@
 import React, { Dispatch } from "react";
 import { connect } from "react-redux";
-import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { AccessToken, StoreState } from "../../types";
 import * as actions from "../../actions";
-import strings from "../../localization/strings";
 import { WebView, NavState } from "react-native";
 import { Buffer } from "buffer";
 
@@ -14,7 +12,7 @@ import { Buffer } from "buffer";
 interface LoginDetails {
   username?: string,
   password?: string,
-  realm?: string,
+  realm?: string
 }
 
 /**
@@ -24,16 +22,17 @@ interface Props {
   navigation: any,
   accessToken?: AccessToken,
   onAccessTokenUpdate: (accessToken: AccessToken) => void,
-  onMoodleTokenUpdate: (moodleTOken: string) => void,
-  locale?: string,
+  onMoodleTokenUpdate: (moodleToken: string) => void,
+  locale?: string
 }
+
 /**
  * Component state
  */
 interface State {
   loginDetails: LoginDetails,
-  loading: boolean
-  error: boolean
+  loading: boolean,
+  error: boolean,
   isLoggedin: boolean
 };
 
@@ -41,11 +40,12 @@ interface State {
  * Login screen component
  */
 class LoginScreen extends React.Component<Props, State> {
+
   /**
    * Navigation options
    */
   public static navigationOptions = {
-    headerTitle: <TopBar showMenu={true}/>,
+    headerTitle: <TopBar showMenu={true}/>
   };
 
   /**
@@ -59,7 +59,7 @@ class LoginScreen extends React.Component<Props, State> {
       loginDetails: {},
       loading: false,
       error: false,
-      isLoggedin: false,
+      isLoggedin: false
     };
   }
 
@@ -94,7 +94,7 @@ class LoginScreen extends React.Component<Props, State> {
     const loginDetails: LoginDetails = this.state.loginDetails;
     loginDetails[key] = value;
     this.setState({
-      loginDetails,
+      loginDetails
     });
   }
 
@@ -110,20 +110,25 @@ class LoginScreen extends React.Component<Props, State> {
    * Monitors the webview navigation, grabs the token and navigates to main page
    */
   private onNavigation = (event: NavState) => {
-    if (!event.url || event.url.indexOf("token=") === -1) { return; }
+    if (!event.url || event.url.indexOf("token=") === -1) {
+      return;
+    }
 
     const token = this.getTokenFromUrl(event.url);
     this.props.onMoodleTokenUpdate(token);
     this.props.navigation.navigate("Quiz");
   }
 
+  /**
+   * Extracts token from url
+   */
   private getTokenFromUrl = (url: string): string => {
     const b64 = Buffer.from(url.split("token=")[1], "base64").toString("ascii");
     const token = b64.split(":::")[1];
 
     return token;
-    }
   }
+}
 
 /**
  * Redux mapper for mapping store state to component props
@@ -134,7 +139,7 @@ function mapStateToProps(state: StoreState) {
   return {
     locale: state.locale,
     accessToken: state.accessToken,
-    moodleToken: state.moodleToken,
+    moodleToken: state.moodleToken
   };
 }
 
@@ -146,7 +151,7 @@ function mapStateToProps(state: StoreState) {
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
     onAccessTokenUpdate: (accessToken: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken)),
-    onMoodleTokenUpdate: (moodleToken: string) => dispatch(actions.moodleTokenUpdate(moodleToken)),
+    onMoodleTokenUpdate: (moodleToken: string) => dispatch(actions.moodleTokenUpdate(moodleToken))
   };
 }
 

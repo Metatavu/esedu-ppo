@@ -2,20 +2,19 @@ import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text } from "native-base";
-import { View, StyleSheet, AsyncStorage } from "react-native";
 import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
-import { HeaderProps, Header } from "react-navigation";
-import Api, { MoodleService } from "moodle-ws-client";
+import { HeaderProps } from "react-navigation";
+import Api from "moodle-ws-client";
 
 /**
  * Component props
  */
-export interface Props {
+interface Props {
   navigation: any,
   locale: string,
-  accessToken?: AccessToken,
+  accessToken?: AccessToken
 };
 
 /**
@@ -23,6 +22,7 @@ export interface Props {
  */
 interface State {
   loading: boolean,
+  error: boolean,
   quizData: any,
   optionsArray: string[],
   accessToken?: AccessToken
@@ -40,12 +40,12 @@ class MainScreen extends React.Component<Props, State> {
    * @param props props
    */
   constructor(props: Props) {
-
     super(props);
     this.state = {
-      loading : false,
-      quizData : [],
-      optionsArray : [],
+      loading: false,
+      error: false,
+      quizData: [],
+      optionsArray: []
     };
   }
 
@@ -54,15 +54,16 @@ class MainScreen extends React.Component<Props, State> {
    */
   public static navigationOptions = (props: HeaderProps) => {
     return ({
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />,
+      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
+  /**
+   * Component did mount lifecycle method
+   */
   public async componentDidMount() {
     this.getTopicsFromMoodle().catch((e) => {
-      if (e) {
-        throw e
-      }
+      this.setState({loading: false, error: true});
     });
   }
 
@@ -88,13 +89,16 @@ class MainScreen extends React.Component<Props, State> {
       );
     }
 
+  /**
+   * Returns topics from moodle Api
+   */
   private async getTopicsFromMoodle() {
-    if (!this.state.moodleToken) { return this.props.navigation.navigate("Login"); }
+    if (!this.state.moodleToken) {
+      return this.props.navigation.navigate("Login");
+    }
 
     // TODO Get course topics from moodle and display them
     const moodleService = Api.getMoodleService("https://ppo-test.metatavu.io", this.state.moodleToken);
-
-    // const quizService = Api.getTopic("https://ppo-test.metatavu.io", this.state.moodleToken);
   }
 }
 
@@ -105,7 +109,7 @@ class MainScreen extends React.Component<Props, State> {
  */
 function mapStateToProps(state: StoreState) {
   return {
-    locale: state.locale,
+    locale: state.locale
   };
 }
 
