@@ -14,7 +14,9 @@ interface Props {
 /**
  * Component state
  */
-interface State {};
+interface State {
+
+};
 
 /**
  * Component for keeping authentication token fresh
@@ -31,7 +33,7 @@ class AuthRefresh extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      eventData: { },
+      eventData: { }
     };
   }
 
@@ -78,7 +80,7 @@ class AuthRefresh extends React.Component<Props, State> {
  */
 function mapStateToProps(state: StoreState) {
   return {
-    accessToken: state.accessToken,
+    accessToken: state.accessToken
   };
 }
 
@@ -89,7 +91,7 @@ function mapStateToProps(state: StoreState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
-    onAccessTokenUpdate: (accessToken: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken)),
+    onAccessTokenUpdate: (accessToken: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken))
   };
 }
 

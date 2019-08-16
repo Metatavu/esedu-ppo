@@ -38,7 +38,7 @@ export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate;
 export function accessTokenUpdate(accessToken?: AccessToken): AccessTokenUpdate {
   return {
     type: constants.ACCESS_TOKEN_UPDATE,
-    accessToken,
+    accessToken
   }
 }
 
@@ -50,7 +50,7 @@ export function accessTokenUpdate(accessToken?: AccessToken): AccessTokenUpdate 
 export function moodleTokenUpdate(moodleToken?: string): MoodleTokenUpdate {
   return{
     type: constants.MOODLE_TOKEN_UPDATE,
-    moodleToken,
+    moodleToken
   }
 }
 
@@ -62,6 +62,6 @@ export function moodleTokenUpdate(moodleToken?: string): MoodleTokenUpdate {
 export function localeUpdate(locale: string): LocaleUpdate {
   return {
     type: constants.LOCALE_UPDATE,
-    locale,
+    locale
   }
 }

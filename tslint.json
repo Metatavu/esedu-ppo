@@ -30,7 +30,10 @@
         ]
         },
         "no-empty-interface": false,
-        "jsdoc-format": false
+        "jsdoc-format": false,
+        "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+        "import-spacing": true,
+        "no-unused-variable": true
     },
     "linterOptions": {
       "exclude": [

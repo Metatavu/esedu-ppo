@@ -9,12 +9,13 @@ export interface Strings extends LocalizedStringsMethods {
   loginScreenUnknownError: string,
   loginScreenWrongInfo: string,
   logoutText: string,
-  cancelButtonText: string
+  cancelButtonText: string,
+  quizScreenErrorText: string
 }
 
 const strings: Strings = new LocalizedStrings({
   en: require("./en.json"),
-  fi: require("./fi.json"),
+  fi: require("./fi.json")
 });
 
 export default strings;

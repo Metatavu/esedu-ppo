@@ -10,37 +10,37 @@ export default StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 24,
-    marginTop: 15,
+    marginTop: 15
   },
   listTextItem: {
     color: "#2AA255",
-    fontSize: 18,
+    fontSize: 18
   },
   listItem: {
     borderBottomWidth: 0,
-    color: "#2AA255",
+    color: "#2AA255"
   },
   listItemSelected: {
-    borderBottomWidth: 0,
+    borderBottomWidth: 0
   },
   button: {
     backgroundColor: "#2AA255",
-    color: "#fff",
+    color: "#fff"
   },
   saveButtonContainer: {
     paddingTop: 25,
     paddingLeft: 15,
-    paddingRight: 15,
+    paddingRight: 15
   },
   phaseReadySwitchContainer: {
     paddingTop: 25,
-    paddingRight: 15,
+    paddingRight: 15
   },
   datePickerContainer: {
     alignItems: "center",
     alignContent: "center",
     justifyContent: "space-between",
     marginTop: 10,
-    marginBottom: 10,
-  },
+    marginBottom: 10
+  }
 });

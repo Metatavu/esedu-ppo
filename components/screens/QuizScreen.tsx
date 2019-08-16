@@ -2,21 +2,21 @@ import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text } from "native-base";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps } from "react-navigation";
 import { QuizHandler } from "../moodlequiz/QuizHandler";
 import Api from "moodle-ws-client"
-import { RadioButtons } from "react-native-radio-buttons";
 import defaultStyles from "../../styles/default-styles";
 import MultiChoiceAnswers from "../generic/MultiChoiceAnswers";
+import strings from "../../localization/strings";
 
 /**
  * Component props
  */
-export interface Props {
+interface Props {
   navigation: any,
   moodleToken?: string,
   locale: string
@@ -27,10 +27,21 @@ export interface Props {
  */
 interface State {
   loading: boolean,
+  error: boolean,
   moodleToken?: string,
   quizData: MultichoiceQuestion[],
   optionsArray: string[]
 };
+
+const styles = StyleSheet.create({
+  baseText: {
+    fontFamily: "Cochin"
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "bold"
+  }
+});
 
 /**
  * Component for application main screen
@@ -45,9 +56,10 @@ class QuizScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading : true,
-      quizData : [],
-      optionsArray : [],
+      loading: false,
+      error: false,
+      quizData: [],
+      optionsArray: []
     };
   }
 
@@ -56,19 +68,22 @@ class QuizScreen extends React.Component<Props, State> {
    */
   public static navigationOptions = (props: HeaderProps) => {
     return ({
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />,
+      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
+  /**
+   * Component did mount lifecycle method
+   */
   public async componentDidMount() {
     if (!this.props.moodleToken) {
       this.props.navigation.navigate("Login");
     }
-    this.getQuestionsFromMoodle().catch((e) => {
-      if (e) {
-        throw e
-      }
+    this.setState({loading: true});
+    const questions = await this.getQuestionsFromMoodle(6, 0).catch((e) => {
+      Alert.alert("Error", strings.quizScreenErrorText);
     });
+    this.setState({quizData: questions[0]});
   }
 
   /**
@@ -99,28 +114,25 @@ class QuizScreen extends React.Component<Props, State> {
     }
   }
 
-  private async getQuestionsFromMoodle() {
-    if (!this.props.moodleToken) { return this.props.navigation.navigate("Login"); }
+  /**
+   * Method gets questions from moodle API
+   */
+  private async getQuestionsFromMoodle(attemptid: number, page: number) {
+    if (!this.props.moodleToken) {
+      return this.props.navigation.navigate("Login");
+    }
     this.setState({loading: true});
     const quizService = Api.getModQuizService("https://ppo-test.metatavu.io", this.props.moodleToken);
 
-    const attemptData: any = await quizService.getAttemptData({attemptid : 6, page: 0});
+    const attemptData: any = await quizService.getAttemptData({attemptid, page});
 
     const quizHandler: QuizHandler = new QuizHandler();
 
     if (attemptData[0].questions) {
       const questions: any[] = quizHandler.getQuizObject(attemptData[0].questions);
 
-      this.setState({quizData : questions});
-
-      const optionsArray = [];
-      for (const answ of this.state.quizData[0].answers) {
-        optionsArray.push(answ.name)
-      }
-      this.setState({optionsArray});
+      return questions;
     }
-
-    this.setState({loading : false});
   }
 }
 
@@ -132,7 +144,7 @@ class QuizScreen extends React.Component<Props, State> {
 function mapStateToProps(state: StoreState) {
   return {
     locale: state.locale,
-    moodleToken: state.moodleToken,
+    moodleToken: state.moodleToken
   };
 }
 
@@ -144,15 +156,5 @@ function mapStateToProps(state: StoreState) {
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {};
 }
-
-const styles = StyleSheet.create({
-  baseText: {
-    fontFamily: "Cochin",
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuizScreen);

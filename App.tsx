@@ -15,7 +15,7 @@ interface State {
   authenticated: boolean
 }
 const initalStoreState: StoreState = {
-  locale: strings.getLanguage(),
+  locale: strings.getLanguage()
 };
 
 const store = createStore<StoreState, AppAction, any, any>(reducer as any, initalStoreState);
@@ -23,14 +23,14 @@ const store = createStore<StoreState, AppAction, any, any>(reducer as any, inita
 const RootStack = createStackNavigator({
   Main: MainScreen,
   Login: LoginScreen,
-  Quiz: QuizScreen,
+  Quiz: QuizScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
-      backgroundColor: "#2AA255",
-    },
+      backgroundColor: "#2AA255"
+    }
   },
-  initialRouteName: "Login",
+  initialRouteName: "Login"
 });
 
 const AppContainer = createAppContainer(RootStack);
@@ -40,7 +40,7 @@ export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      authenticated: false,
+      authenticated: false
     };
   }
 

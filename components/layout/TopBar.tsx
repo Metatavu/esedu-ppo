@@ -44,6 +44,7 @@ class TopBar extends React.Component<Props, State> {
     super(props);
     this.state = {};
   }
+
   /**
    * Component render method
    */
@@ -81,7 +82,7 @@ class TopBar extends React.Component<Props, State> {
             }
 
             {this.props.showLogout &&
-              <Text onPress={() => this.logOut()} style={{color: this.props.textColor || "#fff"}}>
+              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "#fff"}}>
                 {strings.logoutText}
               </Text>
             }
@@ -108,11 +109,11 @@ class TopBar extends React.Component<Props, State> {
   /**
    * Logout function
    */
-  private logOut = () => {
+  private logout = () => {
     this.props.onAccessTokenUpdate(undefined)
     const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: "Login" })],
+      actions: [NavigationActions.navigate({ routeName: "Login" })]
     });
     this.props.navigation.dispatch(resetAction);
   }
@@ -126,7 +127,7 @@ class TopBar extends React.Component<Props, State> {
 function mapStateToProps(state: StoreState) {
   return {
     accessToken: state.accessToken,
-    locale: state.locale,
+    locale: state.locale
   };
 }
 
@@ -138,7 +139,7 @@ function mapStateToProps(state: StoreState) {
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
     onLocaleUpdate: (locale: string) => dispatch(actions.localeUpdate(locale)),
-    onAccessTokenUpdate: (accessToken?: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken)),
+    onAccessTokenUpdate: (accessToken?: AccessToken) => dispatch(actions.accessTokenUpdate(accessToken))
    };
 }
 
