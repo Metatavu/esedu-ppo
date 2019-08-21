@@ -56,19 +56,19 @@ class TopBar extends React.Component<Props, State> {
 
             {this.props.showMenu &&
               <TouchableHighlight onPress={this.toggleLocale} style={{paddingLeft: 10}}>
-                <Text style={{color: this.props.textColor || "#fff"}}>{this.props.locale === "fi" ? "In english" : "Suomeksi"}</Text>
+                <Text style={{color: this.props.textColor || "#000"}}>{this.props.locale === "fi" ? "In english" : "Suomeksi"}</Text>
               </TouchableHighlight>
             }
 
             {this.props.showHeader &&
               <Text style={this.props.header &&
                  this.props.header.length > 20 ?
-                 { fontSize: 18, color: this.props.textColor || "#fff"} : { fontSize: 25, color: this.props.textColor || "#fff"}}>{this.props.header}</Text>
+                 { fontSize: 18, color: this.props.textColor || "#000"} : { fontSize: 25, color: this.props.textColor || "#fff"}}>{this.props.header}</Text>
             }
 
             {this.props.showUser &&
               <TouchableHighlight style={{paddingRight: 10}}>
-                <Text style={{color: this.props.textColor || "#fff"}}>
+                <Text style={{color: this.props.textColor || "#000"}}>
                   {this.props.accessToken ? this.props.accessToken.firstName + " " + this.props.accessToken.lastName : ""}
                 </Text>
               </TouchableHighlight>
