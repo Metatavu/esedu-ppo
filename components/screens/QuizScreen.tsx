@@ -90,7 +90,7 @@ class QuizScreen extends React.Component<Props, State> {
    * Component render
    */
   public render() {
-    if (!this.state.loading) {
+    if (!this.state.loading && this.state.quizData.length !== 0) {
       return (
         <BasicLayout backgroundColor="#fff">
           <Text style={defaultStyles.screenHeader}>{this.state.quizData[0].title}</Text>
