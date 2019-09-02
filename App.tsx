@@ -30,8 +30,9 @@ const RootStack = createStackNavigator({
   defaultNavigationOptions: {
     headerStyle: {
       backgroundColor: "#fff",
-      borderBottomColor: "black",
-      borderBottomWidth: 2
+      borderBottomColor: "#53B02B",
+      borderBottomWidth: 2,
+      height: 100
     }
   },
   initialRouteName: "Login"

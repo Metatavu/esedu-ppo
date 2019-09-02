@@ -1,6 +1,6 @@
 import { AppAction } from "../actions";
 import { StoreState } from "../types";
-import { ACCESS_TOKEN_UPDATE, LOCALE_UPDATE, MOODLE_TOKEN_UPDATE, SELECTED_TOPIC_UPDATE } from "../constants";
+import { ACCESS_TOKEN_UPDATE, LOCALE_UPDATE, MOODLE_TOKEN_UPDATE, SELECTED_TOPIC_UPDATE, SELECTED_ACTIVITY_UPDATE } from "../constants";
 
 /**
  * Reducer function
@@ -19,6 +19,8 @@ export function reducer(storeState: StoreState, action: AppAction): StoreState {
       return {...storeState, moodleToken: action.moodleToken};
     case SELECTED_TOPIC_UPDATE:
       return {...storeState, selectedTopic: action.courseTopic};
+    case SELECTED_ACTIVITY_UPDATE:
+      return {...storeState, selectedActivityId: action.activityId}
   }
 
   return storeState;

@@ -2,15 +2,14 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   screenHeader: {
-    backgroundColor: "#2AA255",
-    color: "#FFF",
+    backgroundColor: "#53B02B",
+    color: "white",
     width: "100%",
-    paddingTop: 15,
-    paddingBottom: 15,
+    padding: 15,
     textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 24,
-    marginTop: 15
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400",
+    fontSize: 20
   },
   listContainer: {
     marginTop: 25,
@@ -21,8 +20,22 @@ export default StyleSheet.create({
     fontSize: 18,
     width: 200,
     height: 50,
+    paddingHorizontal: 5,
     fontFamily: "sans-serif-condensed",
     fontWeight: "400"
+  },
+  topicItemInactiveText: {
+    textAlignVertical: "center",
+    fontSize: 18,
+    width: 200,
+    height: 50,
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400",
+    color: "#8f8f8f"
+  },
+  topicItemInactive: {
+    borderColor: "#8f8f8f",
+    backgroundColor: "#fff"
   },
   topicItemBase: {
     padding: 10,
@@ -91,6 +104,7 @@ export default StyleSheet.create({
   },
   progressIcon: {
     paddingTop: 5,
+    marginRight: 5,
     height: 50,
     width: 50,
     alignSelf: "center"

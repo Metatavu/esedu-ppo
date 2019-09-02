@@ -10,6 +10,7 @@ import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import defaultStyles from "../../styles/default-styles";
+import { HOST_URL, COURSE_ID } from "react-native-dotenv";
 
 /**
  * Component props
@@ -19,7 +20,7 @@ interface Props {
   locale: string,
   accessToken?: AccessToken,
   moodleToken?: string,
-  onSelectedTopicUpdate: (topicContent: CourseTopic) => void,
+  onSelectedTopicUpdate: (topicContent: CourseTopic) => void
 };
 
 /**
@@ -30,7 +31,6 @@ interface State {
   error: boolean,
   accessToken?: AccessToken,
   moodleToken?: string,
-  courseId: number,
   courseContent: CourseTopic[]
 };
 
@@ -66,7 +66,6 @@ class MainScreen extends React.Component<Props, State> {
     this.state = {
       loading: false,
       error: false,
-      courseId: 2,
       courseContent: []
     };
   }
@@ -85,7 +84,7 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    this.getTopicsFromMoodle(this.state.courseId).catch((e) => {
+    this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
       this.setState({loading: false, error: true});
     }).then((courseContent) => {
       this.setState({courseContent});
@@ -109,7 +108,7 @@ class MainScreen extends React.Component<Props, State> {
    */
   public render() {
     return (
-      <BasicLayout loading={this.state.loading} backgroundColor="#fff">
+      <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
         <FlatList
         style={defaultStyles.listContainer}
         data={this.state.courseContent}
@@ -120,7 +119,8 @@ class MainScreen extends React.Component<Props, State> {
             <Icon containerStyle={defaultStyles.taskIcon} size={46} name={item.topicDone ? "trophy" : "eye"} type="evilicon" color="white"/>
             <View style={defaultStyles.topicTaskIconBackground}/>
             <Text style={[defaultStyles.topicItemText, item.topicDone ? defaultStyles.topicItemText : styles.itemActiveText]}>{item.topicName}</Text>
-            <Icon containerStyle={defaultStyles.progressIcon} size={50} name={item.topicDone ? "check" : "arrow-right"} type="evilicon"/>
+            <Icon containerStyle={defaultStyles.progressIcon}
+              color={item.topicDone ? "#2AA255" : "#11511D"} size={50} name={item.topicDone ? "check" : "arrow-right"} type="evilicon"/>
           </View>
         </TouchableOpacity>}
         keyExtractor={(item, index) => index.toString()}
@@ -137,11 +137,11 @@ class MainScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Login");
     }
 
-    const moodleService = await Api.getMoodleService("https://ppo-test.metatavu.io", this.props.moodleToken);
+    const moodleService = await Api.getMoodleService(HOST_URL, this.props.moodleToken);
 
     const topics: any = await moodleService.coreCourseGetContents({courseid: courseId});
 
-    const quizService = await Api.getModQuizService("https://ppo-test.metatavu.io", this.props.moodleToken);
+    const quizService = await Api.getModQuizService(HOST_URL, this.props.moodleToken);
 
     const quizList: any = await quizService.getQuizzesByCourses({courseids: [courseId]});
 
@@ -165,13 +165,17 @@ class MainScreen extends React.Component<Props, State> {
         }
         if (activity.modname === "resource") {
           newCourseItem.topicDone = true;
+          newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
         }
         else if (activity.modname === "quiz") {
           for (const quiz of quizList.quizzes) {
             if (quiz.coursemodule === activity.id) {
-              newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id});
+              newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id, active: true});
             }
           }
+        }
+        else {
+          newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
         }
       }
       if (newCourseItem.id !== 1) {
