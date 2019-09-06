@@ -1,5 +1,5 @@
 import * as constants from "../constants";
-import { AccessToken } from "../types";
+import { AccessToken, CourseTopic, TopicContent } from "../types";
 
 /**
  * Access token update data
@@ -26,9 +26,21 @@ export interface MoodleTokenUpdate {
 }
 
 /**
+ * Selected topic update data
+ */
+export interface SelectedTopicUpdate {
+  type: constants.SELECTED_TOPIC_UPDATE,
+  courseTopic?: CourseTopic
+}
+
+export interface SelectedActivityUpdate {
+  type: constants.SELECTED_ACTIVITY_UPDATE,
+  activityId: number
+}
+/**
  * Actions
  */
-export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate;
+export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate | SelectedTopicUpdate | SelectedActivityUpdate;
 
 /**
  * Store update method for access token
@@ -63,5 +75,29 @@ export function localeUpdate(locale: string): LocaleUpdate {
   return {
     type: constants.LOCALE_UPDATE,
     locale
+  }
+}
+
+/**
+ * Store update method for selected topic
+ * 
+ * @param locale locale
+ */
+export function selectedTopicUpdate(courseTopic: CourseTopic): SelectedTopicUpdate {
+  return {
+    type: constants.SELECTED_TOPIC_UPDATE,
+    courseTopic
+  }
+}
+
+/**
+ * Store update method for selected topic
+ * 
+ * @param locale locale
+ */
+export function selectedActivityUpdate(activityId: number): SelectedActivityUpdate {
+  return {
+    type: constants.SELECTED_ACTIVITY_UPDATE,
+    activityId
   }
 }

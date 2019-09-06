@@ -1,8 +1,8 @@
 import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
-import { Text } from "native-base";
-import { View, StyleSheet, Alert } from "react-native";
+import { Text, Item } from "native-base";
+import { View, StyleSheet, Alert, Button } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
@@ -12,6 +12,8 @@ import Api from "moodle-ws-client"
 import defaultStyles from "../../styles/default-styles";
 import MultiChoiceAnswers from "../generic/MultiChoiceAnswers";
 import strings from "../../localization/strings";
+import { HOST_URL } from "react-native-dotenv";
+import { FlatList } from "react-native-gesture-handler";
 
 /**
  * Component props
@@ -19,7 +21,8 @@ import strings from "../../localization/strings";
 interface Props {
   navigation: any,
   moodleToken?: string,
-  locale: string
+  locale: string,
+  quizId?: number
 };
 
 /**
@@ -30,7 +33,9 @@ interface State {
   error: boolean,
   moodleToken?: string,
   quizData: MultichoiceQuestion[],
-  optionsArray: string[]
+  optionsArray: string[],
+  attemptId?: number,
+  sequenceCheck?: number
 };
 
 const styles = StyleSheet.create({
@@ -40,6 +45,9 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontWeight: "bold"
+  },
+  questionContainer: {
+    marginBottom: 15
   }
 });
 
@@ -59,8 +67,10 @@ class QuizScreen extends React.Component<Props, State> {
       loading: false,
       error: false,
       quizData: [],
-      optionsArray: []
+      optionsArray: [],
+      moodleToken: ""
     };
+    this.saveAnswer = this.saveAnswer.bind(this);
   }
 
   /**
@@ -68,6 +78,7 @@ class QuizScreen extends React.Component<Props, State> {
    */
   public static navigationOptions = (props: HeaderProps) => {
     return ({
+      headerLeft: null,
       headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
@@ -76,30 +87,50 @@ class QuizScreen extends React.Component<Props, State> {
    * Component did mount lifecycle method
    */
   public async componentDidMount() {
+    this.setState({loading: true});
     if (!this.props.moodleToken) {
       this.props.navigation.navigate("Login");
     }
-    this.setState({loading: true});
+
     const questions = await this.getQuestionsFromMoodle(6, 0).catch((e) => {
       Alert.alert("Error", strings.quizScreenErrorText);
     });
-    this.setState({quizData: questions[0]});
+    if (questions) {
+      this.setState({moodleToken: this.props.moodleToken});
+      this.setState({quizData: questions});
+      this.setState({loading: false});
+    }
   }
 
   /**
    * Component render
    */
   public render() {
-    if (!this.state.loading) {
+    if (this.state.quizData.length === 0) {
       return (
-        <BasicLayout backgroundColor="#fff">
-          <Text style={defaultStyles.screenHeader}>{this.state.quizData[0].title}</Text>
-          <MultiChoiceAnswers question={this.state.quizData[0]}/>
-        </BasicLayout>
-      );
+      <BasicLayout loading={this.state.loading} backgroundColor="#fff"></BasicLayout>
+      )
     }
     else {
-      return(<View></View>)
+      return (
+        <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
+          <FlatList
+            data={this.state.quizData}
+            extraData={this.props.children}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) =>
+            <MultiChoiceAnswers  attemptId={this.state.attemptId != null ? this.state.attemptId : 0}
+              moodleToken={this.props.moodleToken ? this.props.moodleToken : ""} exportCode={item.exportCode}
+            triggerAnswerSave={(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) =>
+              this.saveAnswer(value, exportCode, token, attemptId, sequencecheck)} question={item}/>}
+          />
+          <View>
+            <Button color={"#88B620"} title="Tallenna Vastaukset" onPress={() =>
+              this.processAnswers(this.props.moodleToken != null ?
+              this.props.moodleToken : "", this.state.attemptId != null ? this.state.attemptId : -1)}></Button>
+          </View>
+        </BasicLayout>
+      );
     }
   }
 
@@ -115,21 +146,73 @@ class QuizScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Processes the answers and returns the user to the main page.
+   */
+  private async processAnswers(token: string, attemptid: number) {
+    this.setState({loading: true});
+    const quizService = await Api.getModQuizService(HOST_URL, token);
+
+    quizService.processAttempt({attemptid, finishattempt: true});
+
+    this.setState({loading: false});
+    this.props.navigation.navigate("Main");
+  }
+
+  /**
+   * Saves the answer
+   * @param value answer value
+   * @param exportCode answer export code "q3:1_answer"
+   * @param token moodleToken
+   * @param attemptId Id of the current attempt
+   * @param sequencecheck sequencecheck number of the question
+   */
+  private async saveAnswer(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) {
+    const quizService = Api.getModQuizService(HOST_URL, token);
+
+    const data = [{
+        name: exportCode,
+        value: value.toString()
+      },
+      {
+        name: exportCode.split("_")[0] + "_:sequencecheck",
+        value: sequencecheck.toString()
+      }
+    ];
+    const res = quizService.processAttempt({
+      attemptid: attemptId,
+      data
+    });
+  }
+
+  /**
    * Method gets questions from moodle API
    */
   private async getQuestionsFromMoodle(attemptid: number, page: number) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
-    this.setState({loading: true});
-    const quizService = Api.getModQuizService("https://ppo-test.metatavu.io", this.props.moodleToken);
+    else if (!this.props.quizId) {
+      return this.props.navigation.navigate("Login");
+    }
 
-    const attemptData: any = await quizService.getAttemptData({attemptid, page});
+    const quizService = Api.getModQuizService(HOST_URL, this.props.moodleToken);
+
+    let attempt: any = await quizService.getUserAttempts({quizid: this.props.quizId, status: "unfinished", includepreviews: true});
+
+    if (attempt.attempts.length === 0) {
+      await quizService.startAttempt({quizid: this.props.quizId});
+      attempt = await quizService.getUserAttempts({quizid: this.props.quizId, status: "unfinished", includepreviews: true});
+    }
+
+    const attemptData: any = await quizService.getAttemptData({attemptid: attempt.attempts[0].id, page: attempt.attempts[0].currentpage});
+
+    this.setState({sequenceCheck: attemptData.sequencecheck});
+    this.setState({attemptId: attempt.attempts[0].id})
 
     const quizHandler: QuizHandler = new QuizHandler();
 
-    if (attemptData[0].questions) {
-      const questions: any[] = quizHandler.getQuizObject(attemptData[0].questions);
+    if (attemptData.questions) {
+      const questions = await quizHandler.getQuizObject(attemptData.questions);
 
       return questions;
     }
@@ -144,7 +227,8 @@ class QuizScreen extends React.Component<Props, State> {
 function mapStateToProps(state: StoreState) {
   return {
     locale: state.locale,
-    moodleToken: state.moodleToken
+    moodleToken: state.moodleToken,
+    quizId: state.selectedActivityId
   };
 }
 
