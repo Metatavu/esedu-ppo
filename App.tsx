@@ -11,6 +11,7 @@ import AuthRefresh from "./components/generic/AuthRefresh";
 import strings from "./localization/strings";
 import QuizScreen from "./components/screens/QuizScreen";
 import TopicScreen from "./components/screens/TopicScreen";
+import TextContentScreen from "./components/screens/TextContentScreen";
 
 interface State {
   authenticated: boolean
@@ -25,7 +26,8 @@ const RootStack = createStackNavigator({
   Main: MainScreen,
   Login: LoginScreen,
   Quiz: QuizScreen,
-  Topic: TopicScreen
+  Topic: TopicScreen,
+  TextContent: TextContentScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
