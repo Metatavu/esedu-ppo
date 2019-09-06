@@ -8,9 +8,10 @@ import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_ID } from "react-native-dotenv";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -75,7 +76,7 @@ class MainScreen extends React.Component<Props, State> {
    */
   public static navigationOptions = (props: HeaderProps) => {
     return ({
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={false} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -86,6 +87,7 @@ class MainScreen extends React.Component<Props, State> {
     this.setState({loading: true});
     this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
       this.setState({loading: false, error: true});
+      Alert.alert("Error", strings.mainScreenErrorText);
     }).then((courseContent) => {
       this.setState({courseContent});
       this.setState({loading: false});
@@ -151,8 +153,6 @@ class MainScreen extends React.Component<Props, State> {
 
     const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
 
-    console.warn("Messages: ", messages);
-
     const courseContent: CourseTopic[] = [];
 
     for (const topic of topics) {
@@ -178,14 +178,12 @@ class MainScreen extends React.Component<Props, State> {
         else if (activity.modname === "quiz") {
           for (const quiz of quizList.quizzes) {
             if (quiz.coursemodule === activity.id) {
-              console.warn(activity);
               newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id, active: true});
             }
           }
         }
         else if (activity.modname === "page") {
           const pages: any = await pageService.getPagesByCourses({courseids: [COURSE_ID]});
-          console.warn(pages);
           for (const page of pages.pages) {
             if (page.coursemodule === activity.id) {
               newCourseItem.topicContent.push({name: activity.name, type: "page", activityId: page.id, active: true});

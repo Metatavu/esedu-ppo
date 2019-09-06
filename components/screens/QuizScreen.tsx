@@ -79,7 +79,7 @@ class QuizScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -92,14 +92,13 @@ class QuizScreen extends React.Component<Props, State> {
       this.props.navigation.navigate("Login");
     }
 
-    const questions = await this.getQuestionsFromMoodle(6, 0).catch((e) => {
+    await this.getQuestionsFromMoodle(6, 0).catch((e) => {
       Alert.alert("Error", strings.quizScreenErrorText);
-    });
-    if (questions) {
+    }).then((questions) => {
       this.setState({moodleToken: this.props.moodleToken});
       this.setState({quizData: questions});
       this.setState({loading: false});
-    }
+    });
   }
 
   /**
