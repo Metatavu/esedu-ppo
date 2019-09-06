@@ -1,19 +1,13 @@
 import React, { Dispatch } from "react";
-import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
-import { Text, Item } from "native-base";
 import { View, StyleSheet, Alert, Button, WebView } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps } from "react-navigation";
-import { QuizHandler } from "../moodlequiz/QuizHandler";
 import Api from "moodle-ws-client"
-import defaultStyles from "../../styles/default-styles";
-import MultiChoiceAnswers from "../generic/MultiChoiceAnswers";
 import strings from "../../localization/strings";
 import { HOST_URL, COURSE_ID } from "react-native-dotenv";
-import { FlatList } from "react-native-gesture-handler";
 
 /**
  * Component props
@@ -83,7 +77,7 @@ class TextContentScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -91,17 +85,16 @@ class TextContentScreen extends React.Component<Props, State> {
    * Component did mount lifecycle method
    */
   public async componentDidMount() {
-    this.setState({loading: false});
+    this.setState({loading: true});
     if (!this.props.moodleToken || !this.props.pageid) {
       return this.props.navigation.navigate("Login");
     }
 
-    const page = await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
-      Alert.alert("Error", strings.quizScreenErrorText);
+    await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
+      Alert.alert("Error", strings.pageContentErrorText);
+    }).then((page) => {
+      this.setState({pageContent: `<h1>${page.name}</h1>` + page.content, loading: false});
     });
-    console.warn(page);
-    this.setState({pageContent: `<h1>${page.name}</h1>` + page.content, loading: false});
-    console.warn(this.state.pageContent);
   }
 
   /**
@@ -109,11 +102,12 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public render() {
     return (
-        <View style={{flex: 1, justifyContent: "space-between", height: "100%"}}>
-          <WebView style={{width: "100%", height: "100%"}} originWhitelist={["*"]} source={{ html: this.state.pageContent }}/>
+        <View style={{flex: 1, padding: 10, justifyContent: "center", height: "100%"}}>
+          <WebView style={{flex: 1}} originWhitelist={["*"]} source={{ html: this.state.pageContent }}/>
         </View>
     );
   }
+
   /**
    * Component did update lifecycle method
    * 
@@ -125,18 +119,15 @@ class TextContentScreen extends React.Component<Props, State> {
     }
   }
 
-
   /**
    * Method gets questions from moodle API
    */
   private async getContentPageFromMoodle(pageid: number) {
-    console.warn("Trying to get content page:", pageid);
     if (this.props.moodleToken != null) {
       const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
       const pageList: any = await pageService.getPagesByCourses({courseids: [COURSE_ID]});
 
       for (const page of pageList.pages) {
-        console.warn(page.id, "vs", pageid);
         if (page.id === pageid) {
           return page;
         }

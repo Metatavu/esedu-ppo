@@ -1,11 +1,12 @@
 import React, { Dispatch } from "react";
 import { connect } from "react-redux";
-import { Text, View, TouchableHighlight, Image } from "react-native";
+import { Text, View, TouchableHighlight, Image, TouchableOpacity } from "react-native";
 import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import strings from "../../localization/strings";
 import { NavigationActions, StackActions } from "react-navigation";
-import { EseduLogo } from "../../static/icons/index"
+import { EseduLogo } from "../../static/icons/index";
+import { Icon } from "native-base";
 
 /**
  * Component props
@@ -22,7 +23,8 @@ interface Props {
   onLocaleUpdate: (locale: string) => void
   onAccessTokenUpdate: (accessToken?: AccessToken) => void
   locale: string,
-  navigation?: any
+  navigation?: any,
+  showBack: boolean
 }
 
 /**
@@ -53,7 +55,7 @@ class TopBar extends React.Component<Props, State> {
     return (
       <View style={{flex: 1}}>
         <View style={{height: 100}}>
-          <View style={{flex: 1, flexDirection: "row", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
+          <View style={{flex: 1, flexDirection: "row-reverse", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
             {this.props.showHeader &&
               <Text style={this.props.header &&
                  this.props.header.length > 20 ?
@@ -66,9 +68,14 @@ class TopBar extends React.Component<Props, State> {
               </Text>
             }
             {this.props.showLogout &&
-              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "black"}}>
+              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "black", padding: 20}}>
                 {strings.logoutText}
               </Text>
+            }
+            {this.props.showBack &&
+            <TouchableOpacity style={{padding: 20}} onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" type="MaterialIcons"/>
+            </TouchableOpacity>
             }
           </View>
           <View style={{flex: 1, justifyContent: "center", height: 100, width: "100%", position: "absolute", alignItems: "center"}}>

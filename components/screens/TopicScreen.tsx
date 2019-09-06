@@ -7,8 +7,9 @@ import { StoreState, AccessToken, CourseTopic } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -87,7 +88,7 @@ class MainScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -153,8 +154,8 @@ class MainScreen extends React.Component<Props, State> {
       this.props.onSelectedActivityUpdate(activityId);
       this.props.navigation.navigate("TextContent");
     }
-    else{
-      console.warn(type)
+    else {
+      Alert.alert("Error", strings.unsupportedActivityTypeText);
     }
   }
 }

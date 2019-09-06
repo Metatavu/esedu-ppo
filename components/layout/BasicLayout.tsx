@@ -48,7 +48,7 @@ export default class BasicLayout extends React.Component<Props, State> {
     const content = this.props.backgroundImage ? (
       <Container style={styles.container}>
         <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%"}}>
-          <Content>
+          <Content style={{flex: 1}}>
             {this.props.children}
           </Content>
             <Footer>
