@@ -10,6 +10,8 @@ import { Provider } from "react-redux";
 import AuthRefresh from "./components/generic/AuthRefresh";
 import strings from "./localization/strings";
 import QuizScreen from "./components/screens/QuizScreen";
+import TopicScreen from "./components/screens/TopicScreen";
+import TextContentScreen from "./components/screens/TextContentScreen";
 
 interface State {
   authenticated: boolean
@@ -23,11 +25,16 @@ const store = createStore<StoreState, AppAction, any, any>(reducer as any, inita
 const RootStack = createStackNavigator({
   Main: MainScreen,
   Login: LoginScreen,
-  Quiz: QuizScreen
+  Quiz: QuizScreen,
+  Topic: TopicScreen,
+  TextContent: TextContentScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
-      backgroundColor: "#2AA255"
+      backgroundColor: "#fff",
+      borderBottomColor: "#53B02B",
+      borderBottomWidth: 2,
+      height: 100
     }
   },
   initialRouteName: "Login"

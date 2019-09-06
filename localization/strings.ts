@@ -10,7 +10,10 @@ export interface Strings extends LocalizedStringsMethods {
   loginScreenWrongInfo: string,
   logoutText: string,
   cancelButtonText: string,
-  quizScreenErrorText: string
+  quizScreenErrorText: string,
+  mainScreenErrorText: string,
+  pageContentErrorText: string,
+  unsupportedActivityTypeText: string
 }
 
 const strings: Strings = new LocalizedStrings({

@@ -8,5 +8,8 @@
   "loginScreenWrongInfo" : "Kirjautumistiedot eivät ole oikein",
   "logoutText": "Kirjaudu ulos",
   "cancelButtonText": "Peruuta",
-  "quizScreenErrorText": "Kysymyksiä haettaessa tapahtui virhe"
+  "quizScreenErrorText": "Kysymyksiä haettaessa tapahtui virhe",
+  "mainScreenErrorText": "Kurssin sisältöä haettaessa tapahtui virhe",
+  "pageContentErrorText": "Sivun sisältöä haettaessa tapahtui virhe",
+  "unsupportedActivityTypeText": "Tukematon aktiviteetti tyyppi"
 }
