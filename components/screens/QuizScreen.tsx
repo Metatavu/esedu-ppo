@@ -125,7 +125,9 @@ class QuizScreen extends React.Component<Props, State> {
               this.saveAnswer(value, exportCode, token, attemptId, sequencecheck)} question={item}/>}
           />
           <View>
-            <Button color={"#88B620"} title="Tallenna Vastaukset" onPress={() => this.processAnswers()}></Button>
+            <Button color={"#88B620"} title="Tallenna Vastaukset" onPress={() =>
+              this.processAnswers(this.props.moodleToken != null ?
+              this.props.moodleToken : "", this.state.attemptId != null ? this.state.attemptId : -1)}></Button>
           </View>
         </BasicLayout>
       );
@@ -146,7 +148,13 @@ class QuizScreen extends React.Component<Props, State> {
   /**
    * Processes the answers and returns the user to the main page.
    */
-  private processAnswers() {
+  private async processAnswers(token: string, attemptid: number) {
+    this.setState({loading: true});
+    const quizService = await Api.getModQuizService(HOST_URL, token);
+
+    quizService.processAttempt({attemptid, finishattempt: true});
+
+    this.setState({loading: false});
     this.props.navigation.navigate("Main");
   }
 
@@ -160,7 +168,6 @@ class QuizScreen extends React.Component<Props, State> {
    */
   private async saveAnswer(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) {
     const quizService = Api.getModQuizService(HOST_URL, token);
-    const attempt: any = await quizService.getAttemptData({attemptid: attemptId, page: 0});
 
     const data = [{
         name: exportCode,
