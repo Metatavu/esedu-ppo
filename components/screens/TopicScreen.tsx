@@ -118,7 +118,7 @@ class MainScreen extends React.Component<Props, State> {
         <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
             <View style={styles.topicHeadline}>
               <Icon containerStyle={defaultStyles.taskIcon} size={46} name="eye" type="evilicon" color="white"/>
-              <View style={[defaultStyles.topicTaskIconBackground, styles.iconBackgroundAdjust]}/>
+                <View style={[defaultStyles.topicTaskIconBackground, styles.iconBackgroundAdjust]}/>
               <Text style={[styles.topicHeadlineText]}>{this.props.selectedTopic.topicName}</Text>
             </View>
           <FlatList
@@ -148,6 +148,13 @@ class MainScreen extends React.Component<Props, State> {
     if (type === "quiz") {
       this.props.onSelectedActivityUpdate(activityId);
       this.props.navigation.navigate("Quiz");
+    }
+    else if (type === "page") {
+      this.props.onSelectedActivityUpdate(activityId);
+      this.props.navigation.navigate("TextContent");
+    }
+    else{
+      console.warn(type)
     }
   }
 }

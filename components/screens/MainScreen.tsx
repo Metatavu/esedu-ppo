@@ -145,6 +145,14 @@ class MainScreen extends React.Component<Props, State> {
 
     const quizList: any = await quizService.getQuizzesByCourses({courseids: [courseId]});
 
+    const service: any = await moodleService.coreWebserviceGetSiteInfo({});
+
+    const messages: any = await moodleService.coreMessageGetMessages({useridto: service.userid});
+
+    const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
+
+    console.warn("Messages: ", messages);
+
     const courseContent: CourseTopic[] = [];
 
     for (const topic of topics) {
@@ -170,7 +178,17 @@ class MainScreen extends React.Component<Props, State> {
         else if (activity.modname === "quiz") {
           for (const quiz of quizList.quizzes) {
             if (quiz.coursemodule === activity.id) {
+              console.warn(activity);
               newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id, active: true});
+            }
+          }
+        }
+        else if (activity.modname === "page") {
+          const pages: any = await pageService.getPagesByCourses({courseids: [COURSE_ID]});
+          console.warn(pages);
+          for (const page of pages.pages) {
+            if (page.coursemodule === activity.id) {
+              newCourseItem.topicContent.push({name: activity.name, type: "page", activityId: page.id, active: true});
             }
           }
         }
