@@ -218,7 +218,7 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Saves the topic pressed by the user and navigates to the topic page
-   * @param topic 
+   * @param topic topic pressed by the user
    */
   private onTopicPress(topic: CourseTopic) {
     this.props.onSelectedTopicUpdate(topic);
