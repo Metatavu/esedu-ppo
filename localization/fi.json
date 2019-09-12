@@ -11,5 +11,10 @@
   "quizScreenErrorText": "Kysymyksiä haettaessa tapahtui virhe",
   "mainScreenErrorText": "Kurssin sisältöä haettaessa tapahtui virhe",
   "pageContentErrorText": "Sivun sisältöä haettaessa tapahtui virhe",
-  "unsupportedActivityTypeText": "Tukematon aktiviteetti tyyppi"
+  "unsupportedActivityTypeText": "Tukematon aktiviteetti tyyppi",
+  "frontPageText": "Etusivu",
+  "newsText": "Uutiset",
+  "instructionsText": "Ohjeet",
+  "goalsText": "Tavoitteet",
+  "chatText": "Keskustele"
 }

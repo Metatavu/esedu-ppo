@@ -108,5 +108,18 @@ export default StyleSheet.create({
     height: 50,
     width: 50,
     alignSelf: "center"
+  },
+  newsHeadline: {
+    margin: 10,
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  newsText: {
+    margin: 10
+  },
+  newsFooterText: {
+    margin: 10,
+    fontSize: 14,
+    fontStyle: "italic"
   }
 });

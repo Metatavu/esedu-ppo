@@ -13,7 +13,12 @@ export interface Strings extends LocalizedStringsMethods {
   quizScreenErrorText: string,
   mainScreenErrorText: string,
   pageContentErrorText: string,
-  unsupportedActivityTypeText: string
+  unsupportedActivityTypeText: string,
+  frontPageText: string,
+  newsText: string,
+  instructionsText: string,
+  goalsText: string,
+  chatText: string
 }
 
 const strings: Strings = new LocalizedStrings({

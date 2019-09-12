@@ -3,7 +3,7 @@ import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text, View } from "native-base";
 import { Icon } from "react-native-elements";
-import { StoreState, AccessToken, CourseTopic } from "../../types";
+import { StoreState, CourseTopic } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";

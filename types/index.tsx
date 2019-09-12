@@ -79,3 +79,13 @@ export interface TopicContent {
   activityId: number,
   active: boolean
 }
+
+/**
+ * News Item Interface
+ */
+export interface NewsItem {
+  title: string,
+  text: string,
+  author: string
+  dateModified: Date
+};

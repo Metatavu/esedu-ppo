@@ -11,5 +11,10 @@
   "quizScreenErrorText": "Error occured while getting quizes",
   "mainScreenErrorText": "Error occured while getting course content",
   "pageContentErrorText": "Error occured while getting page content",
-  "unsupportedActivityTypeText": "Unsupported activity type"
+  "unsupportedActivityTypeText": "Unsupported activity type",
+  "frontPageText": "Home",
+  "newsText": "News",
+  "instructionsText": "Instructions",
+  "goalsText": "Goals",
+  "chatText": "Messages"
 }

@@ -133,40 +133,23 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Returns the courses topics from moodle Api
+   * 
+   * @param courseId course id to get topics by
    */
   private async getTopicsFromMoodle(courseId: number) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
 
-    const moodleService = await Api.getMoodleService(HOST_URL, this.props.moodleToken);
+    const moodleService = Api.getMoodleService(HOST_URL, this.props.moodleToken);
 
     const topics: any = await moodleService.coreCourseGetContents({courseid: courseId});
 
-    const quizService = await Api.getModQuizService(HOST_URL, this.props.moodleToken);
+    const quizService = Api.getModQuizService(HOST_URL, this.props.moodleToken);
 
     const quizList: any = await quizService.getQuizzesByCourses({courseids: [courseId]});
 
-    const service: any = await moodleService.coreWebserviceGetSiteInfo({});
-
-    const messages: any = await moodleService.coreMessageGetMessages({useridto: service.userid});
-
-    const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
-
-    const forumService = await Api.getModForumService(HOST_URL, this.props.moodleToken);
-
-    const forums: any = await forumService.getForumsByCourses({});
-
-    let news: any = [];
-
-    for (const forum of forums) {
-      if (forum.type === "news") {
-        const forumPosts: any = await forumService.getForumDiscussionsPaginated({forumid: forum.id});
-        news = forumPosts.discussions;
-      }
-    }
-
-    console.warn(news);
+    const pageService = Api.getModPageService(HOST_URL, this.props.moodleToken);
 
     const courseContent: CourseTopic[] = [];
 
@@ -218,6 +201,7 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Saves the topic pressed by the user and navigates to the topic page
+   * 
    * @param topic topic pressed by the user
    */
   private onTopicPress(topic: CourseTopic) {
