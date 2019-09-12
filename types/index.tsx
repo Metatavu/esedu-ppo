@@ -5,6 +5,7 @@ export interface StoreState {
   accessToken?: AccessToken,
   moodleToken?: string,
   selectedTopic?: CourseTopic,
+  selectedActivityId?: number,
   locale: string
 }
 
@@ -42,8 +43,10 @@ export interface AccessToken {
   * @param answers list of possible answers to the question
   */
 export interface MultichoiceQuestion {
-    title: string
-    answers: MultichoiceAnswer[]
+    title: string,
+    exportCode: string,
+    answers: MultichoiceAnswer[],
+    sequencecheck: number
 }
 
 /**
@@ -53,7 +56,7 @@ export interface MultichoiceQuestion {
   */
 export interface MultichoiceAnswer {
   name: string,
-  value: string
+  value: number
 }
 
 /**
@@ -73,5 +76,6 @@ export interface CourseTopic {
 export interface TopicContent {
   name: string,
   type: string,
-  activityId: number
+  activityId: number,
+  active: boolean
 }

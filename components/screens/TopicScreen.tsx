@@ -16,7 +16,8 @@ import defaultStyles from "../../styles/default-styles";
 interface Props {
   navigation: any,
   locale: string,
-  selectedTopic?: CourseTopic
+  selectedTopic?: CourseTopic,
+  onSelectedActivityUpdate: (activityId: number) => void
 };
 
 /**
@@ -85,6 +86,7 @@ class MainScreen extends React.Component<Props, State> {
    */
   public static navigationOptions = (props: HeaderProps) => {
     return ({
+      headerLeft: null,
       headerTitle: <TopBar navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
@@ -113,7 +115,7 @@ class MainScreen extends React.Component<Props, State> {
   public render() {
     if (this.props.selectedTopic) {
       return (
-        <BasicLayout loading={this.state.loading} backgroundColor="#fff">
+        <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
             <View style={styles.topicHeadline}>
               <Icon containerStyle={defaultStyles.taskIcon} size={46} name="eye" type="evilicon" color="white"/>
               <View style={[defaultStyles.topicTaskIconBackground, styles.iconBackgroundAdjust]}/>
@@ -124,9 +126,10 @@ class MainScreen extends React.Component<Props, State> {
           data={this.props.selectedTopic.topicContent}
           renderItem={({item}) =>
           <TouchableOpacity onPress= {() => this.onActivityPress(item.type, item.activityId)}>
-            <View style={defaultStyles.topicItemBase}>
-              <Text style={[defaultStyles.topicItemText, styles.activityText]}>{item.name}</Text>
-              <Icon containerStyle={defaultStyles.progressIcon} size={50} name="arrow-right" type="evilicon"/>
+            <View style={item.active ? defaultStyles.topicItemBase : [defaultStyles.topicItemBase, defaultStyles.topicItemInactive]}>
+              <Text style={item.active ? [defaultStyles.topicItemText, styles.activityText] : defaultStyles.topicItemInactiveText}>{item.name}</Text>
+              {item.active ? <Icon containerStyle={defaultStyles.progressIcon}
+                iconStyle={{color: "white"}} size={50} name="pencil" type="evilicon"/> : <View></View>}
             </View>
           </TouchableOpacity>}
           keyExtractor={(item, index) => index.toString()}
@@ -143,8 +146,8 @@ class MainScreen extends React.Component<Props, State> {
    */
   private onActivityPress(type: string, activityId: number) {
     if (type === "quiz") {
-      // TODO navigate to quiz page and pass the quiz id
-      // this.props.navigation.navigate("Quiz");
+      this.props.onSelectedActivityUpdate(activityId);
+      this.props.navigation.navigate("Quiz");
     }
   }
 }
@@ -169,6 +172,7 @@ function mapStateToProps(state: StoreState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
+    onSelectedActivityUpdate: (activityId: number) => dispatch(actions.selectedActivityUpdate(activityId))
   };
 }
 

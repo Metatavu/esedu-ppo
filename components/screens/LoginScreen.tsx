@@ -45,7 +45,7 @@ class LoginScreen extends React.Component<Props, State> {
    * Navigation options
    */
   public static navigationOptions = {
-    headerTitle: <TopBar showMenu={true}/>
+    headerVisible: false
   };
 
   /**
@@ -116,7 +116,7 @@ class LoginScreen extends React.Component<Props, State> {
 
     const token = this.getTokenFromUrl(event.url);
     this.props.onMoodleTokenUpdate(token);
-    this.props.navigation.navigate("Main");
+    this.props.navigation.replace("Main");
   }
 
   /**

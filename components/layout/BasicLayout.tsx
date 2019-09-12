@@ -1,12 +1,14 @@
 import React from "react";
 import { Container, Content, Footer, Spinner } from "native-base";
 import { StyleSheet, View, ImageBackground } from "react-native";
+import FooterBar from "./FooterBar";
 
 interface Props {
   backgroundColor: string,
   backgroundImage?: any
   footerContent?: JSX.Element
-  loading?: boolean
+  loading?: boolean,
+  navigation?: any
 }
 
 interface State {
@@ -49,11 +51,8 @@ export default class BasicLayout extends React.Component<Props, State> {
           <Content>
             {this.props.children}
           </Content>
-          {this.props.footerContent &&
             <Footer>
-              {this.props.footerContent}
             </Footer>
-          }
         </ImageBackground>
       </Container>
     ) : (
@@ -61,11 +60,8 @@ export default class BasicLayout extends React.Component<Props, State> {
         <Content>
           {this.props.children}
         </Content>
-        {this.props.footerContent &&
-          <Footer>
-            {this.props.footerContent}
-          </Footer>
-        }
+        <FooterBar navigation={this.props.navigation}>
+        </FooterBar>
       </Container>
     );
 
