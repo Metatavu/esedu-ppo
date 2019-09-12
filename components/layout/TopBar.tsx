@@ -1,10 +1,12 @@
 import React, { Dispatch } from "react";
 import { connect } from "react-redux";
-import { Text, View, TouchableHighlight } from "react-native";
+import { Text, View, TouchableHighlight, Image, TouchableOpacity } from "react-native";
 import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import strings from "../../localization/strings";
 import { NavigationActions, StackActions } from "react-navigation";
+import { EseduLogo } from "../../static/icons/index";
+import { Icon } from "native-base";
 
 /**
  * Component props
@@ -21,7 +23,8 @@ interface Props {
   onLocaleUpdate: (locale: string) => void
   onAccessTokenUpdate: (accessToken?: AccessToken) => void
   locale: string,
-  navigation?: any
+  navigation?: any,
+  showBack: boolean
 }
 
 /**
@@ -51,41 +54,32 @@ class TopBar extends React.Component<Props, State> {
   public render() {
     return (
       <View style={{flex: 1}}>
-        <View style={{height: 50}}>
-          <View style={{flex: 1, flexDirection: "row", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
-
-            {this.props.showMenu &&
-              <TouchableHighlight onPress={this.toggleLocale} style={{paddingLeft: 10}}>
-                <Text style={{color: this.props.textColor || "#fff"}}>{this.props.locale === "fi" ? "In english" : "Suomeksi"}</Text>
-              </TouchableHighlight>
-            }
-
+        <View style={{height: 100}}>
+          <View style={{flex: 1, flexDirection: "row-reverse", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
             {this.props.showHeader &&
               <Text style={this.props.header &&
                  this.props.header.length > 20 ?
-                 { fontSize: 18, color: this.props.textColor || "#fff"} : { fontSize: 25, color: this.props.textColor || "#fff"}}>{this.props.header}</Text>
+                 { fontSize: 18, color: this.props.textColor || "#000"} : { fontSize: 25, color: this.props.textColor || "#fff"}}>{this.props.header}</Text>
             }
-
-            {this.props.showUser &&
-              <TouchableHighlight style={{paddingRight: 10}}>
-                <Text style={{color: this.props.textColor || "#fff"}}>
-                  {this.props.accessToken ? this.props.accessToken.firstName + " " + this.props.accessToken.lastName : ""}
-                </Text>
-              </TouchableHighlight>
-            }
-
             {this.props.showCancel &&
               <Text onPress={() => this.props.navigation
               .reset([NavigationActions.navigate({routeName: "Main"})], 0)} style={{color: this.props.textColor || "#fff"}}>
                 {strings.cancelButtonText}
               </Text>
             }
-
             {this.props.showLogout &&
-              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "#fff"}}>
+              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "black", padding: 20}}>
                 {strings.logoutText}
               </Text>
             }
+            {this.props.showBack &&
+            <TouchableOpacity style={{padding: 20}} onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" type="MaterialIcons"/>
+            </TouchableOpacity>
+            }
+          </View>
+          <View style={{flex: 1, justifyContent: "center", height: 100, width: "100%", position: "absolute", alignItems: "center"}}>
+              <Image source={EseduLogo} style={{width: 50, height: 50}}/>
           </View>
         </View>
       </View>

@@ -1,6 +1,5 @@
 import React, { Dispatch } from "react";
 import { connect } from "react-redux";
-import TopBar from "../layout/TopBar";
 import { AccessToken, StoreState } from "../../types";
 import * as actions from "../../actions";
 import { WebView, NavState } from "react-native";
@@ -45,7 +44,8 @@ class LoginScreen extends React.Component<Props, State> {
    * Navigation options
    */
   public static navigationOptions = {
-    headerTitle: <TopBar showMenu={true}/>
+    headerVisible: false,
+    header: null
   };
 
   /**
@@ -116,7 +116,7 @@ class LoginScreen extends React.Component<Props, State> {
 
     const token = this.getTokenFromUrl(event.url);
     this.props.onMoodleTokenUpdate(token);
-    this.props.navigation.navigate("Quiz");
+    this.props.navigation.replace("Main");
   }
 
   /**
