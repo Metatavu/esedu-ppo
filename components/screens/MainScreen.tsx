@@ -164,8 +164,7 @@ class MainScreen extends React.Component<Props, State> {
         }
         if (activity.modname === "resource") {
           newCourseItem.topicDone = true;
-        }
-        else if (activity.modname === "quiz") {
+        } else if (activity.modname === "quiz") {
           for (const quiz of quizList.quizzes) {
             if (quiz.coursemodule === activity.id) {
               newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id});
@@ -173,6 +172,7 @@ class MainScreen extends React.Component<Props, State> {
           }
         }
       }
+
       if (newCourseItem.id !== 1) {
         courseContent.push(newCourseItem);
       }
@@ -182,7 +182,7 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Saves the topic pressed by the user and navigates to the topic page
-   * @param topic 
+   * @param topic selected topic
    */
   private onTopicPress(topic: CourseTopic) {
     this.props.onSelectedTopicUpdate(topic);
