@@ -84,12 +84,11 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
+    const courseContent = await this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
       this.setState({loading: false, error: true});
-    }).then((courseContent) => {
-      this.setState({courseContent});
-      this.setState({loading: false});
     });
+    this.setState({courseContent});
+    this.setState({loading: false});
   }
 
   /**
@@ -178,6 +177,7 @@ class MainScreen extends React.Component<Props, State> {
           newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
         }
       }
+
       if (newCourseItem.id !== 1) {
         courseContent.push(newCourseItem);
       }
@@ -187,7 +187,7 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Saves the topic pressed by the user and navigates to the topic page
-   * @param topic 
+   * @param topic selected topic
    */
   private onTopicPress(topic: CourseTopic) {
     this.props.onSelectedTopicUpdate(topic);
