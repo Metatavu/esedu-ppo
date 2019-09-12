@@ -153,6 +153,21 @@ class MainScreen extends React.Component<Props, State> {
 
     const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
 
+    const forumService = await Api.getModForumService(HOST_URL, this.props.moodleToken);
+
+    const forums: any = await forumService.getForumsByCourses({});
+
+    let news: any = [];
+
+    for (const forum of forums) {
+      if (forum.type === "news") {
+        const forumPosts: any = await forumService.getForumDiscussionsPaginated({forumid: forum.id});
+        news = forumPosts.discussions;
+      }
+    }
+
+    console.warn(news);
+
     const courseContent: CourseTopic[] = [];
 
     for (const topic of topics) {

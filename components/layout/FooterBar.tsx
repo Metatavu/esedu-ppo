@@ -63,7 +63,7 @@ class FooterBar extends React.Component<Props, State> {
               <Icon type="AntDesign" style={styles.footerIcon}  name="home" />
               <Text>Etusivu</Text>
             </Button>
-            <Button vertical>
+            <Button onPress={() => this.props.navigation.navigate("News")} vertical active={true} style={{backgroundColor: "white"}}>
               <Icon type="FontAwesome" style={styles.footerIcon} name="newspaper-o" />
               <Text>Uutiset</Text>
             </Button>
