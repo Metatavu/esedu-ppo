@@ -116,7 +116,7 @@ class LoginScreen extends React.Component<Props, State> {
 
     const token = this.getTokenFromUrl(event.url);
     this.props.onMoodleTokenUpdate(token);
-    this.props.navigation.navigate("Quiz");
+    this.props.navigation.navigate("Main");
   }
 
   /**

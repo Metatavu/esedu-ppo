@@ -4,6 +4,7 @@
 export interface StoreState {
   accessToken?: AccessToken,
   moodleToken?: string,
+  selectedTopic?: CourseTopic,
   locale: string
 }
 
@@ -53,4 +54,24 @@ export interface MultichoiceQuestion {
 export interface MultichoiceAnswer {
   name: string,
   value: string
+}
+
+/**
+ * Course Topic interface
+ */
+export interface CourseTopic {
+  id: number,
+  topicName: string,
+  topicDone: boolean,
+  topicAvailable: boolean,
+  topicContent: TopicContent[]
+}
+
+/**
+ * Topic Content interface
+ */
+export interface TopicContent {
+  name: string,
+  type: string,
+  activityId: number
 }
