@@ -85,13 +85,12 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
+    const courseContent = await this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
       this.setState({loading: false, error: true});
       Alert.alert("Error", strings.mainScreenErrorText);
-    }).then((courseContent) => {
-      this.setState({courseContent});
-      this.setState({loading: false});
     });
+    this.setState({courseContent});
+    this.setState({loading: false});
   }
 
   /**
