@@ -12,6 +12,7 @@ import strings from "./localization/strings";
 import QuizScreen from "./components/screens/QuizScreen";
 import TopicScreen from "./components/screens/TopicScreen";
 import TextContentScreen from "./components/screens/TextContentScreen";
+import NewsScreen from "./components/screens/NewsScreen";
 
 interface State {
   authenticated: boolean
@@ -27,7 +28,8 @@ const RootStack = createStackNavigator({
   Login: LoginScreen,
   Quiz: QuizScreen,
   Topic: TopicScreen,
-  TextContent: TextContentScreen
+  TextContent: TextContentScreen,
+  News: NewsScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
