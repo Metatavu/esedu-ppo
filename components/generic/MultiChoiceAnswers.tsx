@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { MultichoiceQuestion, MultichoiceAnswer } from "../../types";
+import { MultichoiceQuestion } from "../../types";
 import defaultStyles from "../../styles/default-styles";
-import { Grid, Row, Col, View, Text } from "native-base";
-import { FlatList, TouchableOpacity, KeyboardAvoidingViewBase, StyleSheet } from "react-native";
-import { Icon } from "react-native-elements";
+import { View, Text } from "native-base";
+import { FlatList, TouchableOpacity, StyleSheet } from "react-native";
 
 /**
  * Component props

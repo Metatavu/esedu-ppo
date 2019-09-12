@@ -4,8 +4,8 @@ import { Text, View, TouchableHighlight, StyleSheet } from "react-native";
 import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import strings from "../../localization/strings";
-import { NavigationActions, StackActions } from "react-navigation";
-import { Container, Header, Content, Footer, FooterTab, Button, Icon, Badge } from "native-base";
+import { Footer, FooterTab, Button, Icon } from "native-base";
+
 /**
  * Component props
  */
@@ -61,23 +61,23 @@ class FooterBar extends React.Component<Props, State> {
           <FooterTab style={{height: 70, backgroundColor: "#fff", borderTopColor: "#53B02B", borderTopWidth: 1.5}}>
             <Button onPress={() => this.props.navigation.navigate("Main")} vertical active={true} style={{backgroundColor: "white"}}>
               <Icon type="AntDesign" style={styles.footerIcon}  name="home" />
-              <Text>Etusivu</Text>
+              <Text>{strings.frontPageText}</Text>
             </Button>
             <Button onPress={() => this.props.navigation.navigate("News")} vertical active={true} style={{backgroundColor: "white"}}>
               <Icon type="FontAwesome" style={styles.footerIcon} name="newspaper-o" />
-              <Text>Uutiset</Text>
+              <Text>{strings.newsText}</Text>
             </Button>
             <Button vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="information-outline" />
-              <Text>Ohjeet</Text>
+              <Text>{strings.instructionsText}</Text>
             </Button>
             <Button vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="check-circle-outline" />
-              <Text>Tavoitteet</Text>
+              <Text>{strings.goalsText}</Text>
             </Button>
             <Button vertical>
               <Icon type="MaterialIcons" style={styles.footerIcon} name="chat-bubble-outline" />
-              <Text>Keskustele</Text>
+              <Text>{strings.chatText}</Text>
             </Button>
           </FooterTab>
         </Footer>

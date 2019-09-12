@@ -1,7 +1,6 @@
 import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
-import { Text, Item } from "native-base";
 import { View, StyleSheet, Alert, Button } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
@@ -9,7 +8,6 @@ import { connect } from "react-redux";
 import { HeaderProps } from "react-navigation";
 import { QuizHandler } from "../moodlequiz/QuizHandler";
 import Api from "moodle-ws-client"
-import defaultStyles from "../../styles/default-styles";
 import MultiChoiceAnswers from "../generic/MultiChoiceAnswers";
 import strings from "../../localization/strings";
 import { HOST_URL } from "react-native-dotenv";

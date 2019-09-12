@@ -2,12 +2,12 @@ import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text, View } from "native-base";
-import { StoreState, AccessToken, CourseTopic } from "../../types";
+import { StoreState, AccessToken, CourseTopic, NewsItem } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
-import { StyleSheet, Alert } from "react-native";
+import { Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_ID } from "react-native-dotenv";
 import strings from "../../localization/strings";
@@ -29,16 +29,8 @@ interface State {
   moodleToken?: string,
   loading: boolean,
   error: boolean,
-  news: News[]
+  news: NewsItem[]
 };
-
-interface News {
-  title: string,
-  text: string
-}
-
-const styles = StyleSheet.create({
-})
 
 /**
  * Component for application main screen
@@ -67,7 +59,7 @@ class NewsScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar showBack={false} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -76,13 +68,12 @@ class NewsScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    this.getNewsFromMoodle(COURSE_ID).catch((e) => {
+    const news = await this.getNewsFromMoodle(COURSE_ID).catch((e) => {
       this.setState({loading: false, error: true});
       Alert.alert("Error", strings.mainScreenErrorText);
-    }).then((news) => {
-      this.setState({news});
-      this.setState({loading: false});
     });
+    this.setState({news});
+    this.setState({loading: false});
   }
 
   /**
@@ -107,8 +98,9 @@ class NewsScreen extends React.Component<Props, State> {
         data={this.state.news}
         renderItem={({item}) =>
           <View style={{margin: 10}}>
-            <Text style={defaultStyles.screenHeader}>{item.title}</Text>
-            <Text style={{margin: 10}}>{item.text}</Text>
+            <Text style={defaultStyles.newsHeadline}>{item.title}</Text>
+            <Text style={{margin: 10}}>{this.cleanUpText(item.text)}</Text>
+            <Text style={defaultStyles.newsFooterText}>{this.cleanUpText(item.author)} {item.dateModified.toLocaleDateString()}</Text>
           </View>
           }
         keyExtractor={(item, index) => index.toString()}
@@ -118,30 +110,44 @@ class NewsScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Removes html markings from string.
+   * @param text string to clean
+   */
+  private cleanUpText(text: string) {
+    text = text.replace("</p>", " ");
+    return text.replace(/<\/?[^>]+(>|$)/g, "");
+  }
+
+  /**
    * Returns the courses topics from moodle Api
    */
   private async getNewsFromMoodle(courseId: number) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
-    const forumService = await Api.getModForumService(HOST_URL, this.props.moodleToken);
+
+    const forumService = Api.getModForumService(HOST_URL, this.props.moodleToken);
 
     const forums: any = await forumService.getForumsByCourses({courseids : [courseId]});
 
-    const news: News[] = [];
+    const news: NewsItem[] = [];
 
     for (const forum of forums) {
       if (forum.type === "news") {
         const forumPosts: any = await forumService.getForumDiscussionsPaginated({forumid: forum.id});
         for (const post of forumPosts.discussions) {
-          const newsPost: News = {
+          const date = new Date(post.timemodified * 1000)
+          const newsPost: NewsItem = {
             title: post.subject,
-            text: post.message
+            text: post.message,
+            author: post.userfullname,
+            dateModified: date
           }
           news.push(newsPost);
         }
       }
     }
+
     return news;
   }
 }
