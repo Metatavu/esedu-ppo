@@ -9,7 +9,7 @@ import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
 import { Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
-import { HOST_URL, COURSE_ID } from "react-native-dotenv";
+import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import strings from "../../localization/strings";
 
 /**
@@ -49,7 +49,6 @@ class NewsScreen extends React.Component<Props, State> {
       loading: false,
       error: false,
       news: []
-
     };
   }
 
@@ -68,7 +67,7 @@ class NewsScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    const news = await this.getNewsFromMoodle(COURSE_ID).catch((e) => {
+    const news = await this.getNewsFromMoodle(COURSE_IDS.split(",")).catch((e) => {
       this.setState({loading: false, error: true});
       Alert.alert("Error", strings.mainScreenErrorText);
     });
@@ -120,15 +119,16 @@ class NewsScreen extends React.Component<Props, State> {
 
   /**
    * Returns the courses topics from moodle Api
+   * @param courseId Course to retrieve the news section for
    */
-  private async getNewsFromMoodle(courseId: number) {
+  private async getNewsFromMoodle(courseIds: number[]) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
 
     const forumService = Api.getModForumService(HOST_URL, this.props.moodleToken);
 
-    const forums: any = await forumService.getForumsByCourses({courseids : [courseId]});
+    const forums: any = await forumService.getForumsByCourses({courseids : courseIds});
 
     const news: NewsItem[] = [];
 
@@ -160,7 +160,8 @@ class NewsScreen extends React.Component<Props, State> {
 function mapStateToProps(state: StoreState) {
   return {
     locale: state.locale,
-    moodleToken: state.moodleToken
+    moodleToken: state.moodleToken,
+    courseid: state.selectedSectionId
   };
 }
 

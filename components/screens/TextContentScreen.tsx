@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { HeaderProps } from "react-navigation";
 import Api from "moodle-ws-client"
 import strings from "../../localization/strings";
-import { HOST_URL, COURSE_ID } from "react-native-dotenv";
+import { HOST_URL } from "react-native-dotenv";
 
 /**
  * Component props
@@ -17,6 +17,7 @@ interface Props {
   moodleToken?: string,
   locale: string,
   pageid?: number
+  courseid?: number
 };
 
 /**
@@ -86,15 +87,27 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    if (!this.props.moodleToken || !this.props.pageid) {
+
+    const pageID = this.props.navigation.getParam("pageId");
+
+    if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
 
-    await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
+    if (pageID != null) {
+      const id = parseInt(pageID, 10);
+      const pageContent = await this.getContentPageFromMoodle(id).catch((e) => {
+        Alert.alert("Error", strings.pageContentErrorText);
+      });
+      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
+    } else if (this.props.pageid) {
+      const pageContent = await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
+        Alert.alert("Error", strings.pageContentErrorText);
+      });
+      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
+    } else {
       Alert.alert("Error", strings.pageContentErrorText);
-    }).then((page) => {
-      this.setState({pageContent: `<h1>${page.name}</h1>` + page.content, loading: false});
-    });
+    }
   }
 
   /**
@@ -120,21 +133,24 @@ class TextContentScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Method gets questions from moodle API
+   * Method gets text page from moodle API
+   * 
+   * @param pageid content page id to fetch
    */
-  private async getContentPageFromMoodle(pageid: number) {
-    if (this.props.moodleToken != null) {
-      const pageService = await Api.getModPageService(HOST_URL, this.props.moodleToken);
-      const pageList: any = await pageService.getPagesByCourses({courseids: [COURSE_ID]});
+  public async getContentPageFromMoodle(pageid: number) {
+    if (this.props.moodleToken && this.props.courseid) {
+      const pageService = Api.getModPageService(HOST_URL, this.props.moodleToken);
+      const pageList: any = await pageService.getPagesByCourses({courseids: [this.props.courseid]});
 
       for (const page of pageList.pages) {
-        if (page.id === pageid) {
+        if (parseInt(page.coursemodule, 10) === pageid) {
           return page;
         }
       }
     }
   }
 }
+
 /**
  * Redux mapper for mapping store state to component props
  * 
@@ -144,7 +160,8 @@ function mapStateToProps(state: StoreState) {
   return {
     locale: state.locale,
     moodleToken: state.moodleToken,
-    pageid: state.selectedActivityId
+    pageid: state.selectedActivityId,
+    courseid: state.selectedSectionId
   };
 }
 

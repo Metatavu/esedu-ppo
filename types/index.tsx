@@ -6,6 +6,7 @@ export interface StoreState {
   moodleToken?: string,
   selectedTopic?: CourseTopic,
   selectedActivityId?: number,
+  selectedSectionId?: number,
   locale: string
 }
 
@@ -68,6 +69,14 @@ export interface CourseTopic {
   topicDone: boolean,
   topicAvailable: boolean,
   topicContent: TopicContent[]
+}
+
+/**
+ * Course Section interface
+ */
+export interface CourseSection {
+  id: number,
+  sectionName: string,
 }
 
 /**

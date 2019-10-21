@@ -3,14 +3,14 @@ import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text, View } from "native-base";
 import { Icon } from "react-native-elements";
-import { StoreState, AccessToken, CourseTopic } from "../../types";
+import { StoreState, AccessToken, CourseTopic, CourseSection } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
-import { HOST_URL, COURSE_ID } from "react-native-dotenv";
+import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import strings from "../../localization/strings";
 
 /**
@@ -21,7 +21,7 @@ interface Props {
   locale: string,
   accessToken?: AccessToken,
   moodleToken?: string,
-  onSelectedTopicUpdate: (topicContent: CourseTopic) => void
+  onSelectedSectionUpdate: (sectionId: number) => void
 };
 
 /**
@@ -32,7 +32,7 @@ interface State {
   error: boolean,
   accessToken?: AccessToken,
   moodleToken?: string,
-  courseContent: CourseTopic[]
+  courseSections: CourseSection[]
 };
 
 const styles = StyleSheet.create({
@@ -67,7 +67,7 @@ class MainScreen extends React.Component<Props, State> {
     this.state = {
       loading: false,
       error: false,
-      courseContent: []
+      courseSections: []
     };
   }
 
@@ -85,11 +85,11 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    const courseContent = await this.getTopicsFromMoodle(COURSE_ID).catch((e) => {
+    const courseSections = await this.getCoursesFromMoodle(COURSE_IDS.split(",")).catch((e) => {
       this.setState({loading: false, error: true});
-      Alert.alert("Error", strings.mainScreenErrorText);
+      Alert.alert("Error", "Error in main");
     });
-    this.setState({courseContent});
+    this.setState({courseSections});
     this.setState({loading: false});
   }
 
@@ -112,16 +112,14 @@ class MainScreen extends React.Component<Props, State> {
       <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
         <FlatList
         style={defaultStyles.listContainer}
-        data={this.state.courseContent}
+        data={this.state.courseSections}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onTopicPress(item)}>
-          <View style={[defaultStyles.topicItemBase,
-            item.topicDone ? styles.itemDone : (item.topicAvailable ? defaultStyles.topicItemBase : styles.topicItemInactive)]}>
-            <Icon containerStyle={defaultStyles.taskIcon} size={46} name={item.topicDone ? "trophy" : "eye"} type="evilicon" color="white"/>
+          <View style={defaultStyles.topicItemBase}>
+            <Icon containerStyle={defaultStyles.taskIcon} size={46} name="trophy" type="evilicon" color="white"/>
             <View style={defaultStyles.topicTaskIconBackground}/>
-            <Text style={[defaultStyles.topicItemText, item.topicDone ? defaultStyles.topicItemText : styles.itemActiveText]}>{item.topicName}</Text>
-            <Icon containerStyle={defaultStyles.progressIcon}
-              color={item.topicDone ? "#2AA255" : "#11511D"} size={50} name={item.topicDone ? "check" : "arrow-right"} type="evilicon"/>
+            <Text style={[defaultStyles.topicItemText, styles.itemActiveText]}>{item.sectionName}</Text>
+            <Icon containerStyle={defaultStyles.progressIcon} color="#fff" size={50} name="arrow-right" type="evilicon"/>
           </View>
         </TouchableOpacity>}
         keyExtractor={(item, index) => index.toString()}
@@ -135,67 +133,28 @@ class MainScreen extends React.Component<Props, State> {
    * 
    * @param courseId course id to get topics by
    */
-  private async getTopicsFromMoodle(courseId: number) {
+  private async getCoursesFromMoodle(courseIds: number[]) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
-
     const moodleService = Api.getMoodleService(HOST_URL, this.props.moodleToken);
+    const options = {
+      options: {
+      ids: courseIds
 
-    const topics: any = await moodleService.coreCourseGetContents({courseid: courseId});
+    }};
+    const courses: any = await moodleService.coreCourseGetCoursesByField({field: "ids", value: courseIds.toString()});
 
-    const quizService = Api.getModQuizService(HOST_URL, this.props.moodleToken);
+    const courseSections: CourseSection[] = [];
 
-    const quizList: any = await quizService.getQuizzesByCourses({courseids: [courseId]});
-
-    const pageService = Api.getModPageService(HOST_URL, this.props.moodleToken);
-
-    const courseContent: CourseTopic[] = [];
-
-    for (const topic of topics) {
-      const newCourseItem: CourseTopic = {
-        id: topic.id,
-        topicName: topic.name,
-        topicDone: true,
-        topicAvailable: true,
-        topicContent: []
+    for (const section of courses.courses) {
+      const newCourseSection: CourseSection = {
+        id: section.id,
+        sectionName: section.fullname
       }
-      if (topic.modules.length === 0) {
-        newCourseItem.topicDone = false
-      }
-
-      for (const activity of topic.modules) {
-        if (activity.completion === 1 && activity.completiondata.state === 0) {
-          newCourseItem.topicDone = false;
-        }
-        if (activity.modname === "resource") {
-          newCourseItem.topicDone = true;
-          newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
-        }
-        else if (activity.modname === "quiz") {
-          for (const quiz of quizList.quizzes) {
-            if (quiz.coursemodule === activity.id) {
-              newCourseItem.topicContent.push({name: activity.name, type: "quiz", activityId: quiz.id, active: true});
-            }
-          }
-        }
-        else if (activity.modname === "page") {
-          const pages: any = await pageService.getPagesByCourses({courseids: [COURSE_ID]});
-          for (const page of pages.pages) {
-            if (page.coursemodule === activity.id) {
-              newCourseItem.topicContent.push({name: activity.name, type: "page", activityId: page.id, active: true});
-            }
-          }
-        }
-        else {
-          newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
-        }
-      }
-      if (newCourseItem.id !== 1) {
-        courseContent.push(newCourseItem);
-      }
+      courseSections.push(newCourseSection)
     }
-    return courseContent;
+    return courseSections;
   }
 
   /**
@@ -203,9 +162,9 @@ class MainScreen extends React.Component<Props, State> {
    * 
    * @param topic topic pressed by the user
    */
-  private onTopicPress(topic: CourseTopic) {
-    this.props.onSelectedTopicUpdate(topic);
-    this.props.navigation.navigate("Topic");
+  private onTopicPress(section: CourseSection) {
+    this.props.onSelectedSectionUpdate(section.id);
+    this.props.navigation.navigate("Section");
   }
 }
 
@@ -228,7 +187,7 @@ function mapStateToProps(state: StoreState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
-    onSelectedTopicUpdate: (courseTopic: CourseTopic) => dispatch(actions.selectedTopicUpdate(courseTopic))
+    onSelectedSectionUpdate: (sectionId: number) => dispatch(actions.selectedSectionUpdate(sectionId))
   };
 }
 
