@@ -37,10 +37,14 @@ export interface SelectedActivityUpdate {
   type: constants.SELECTED_ACTIVITY_UPDATE,
   activityId: number
 }
+export interface SelectedSectionUpdate {
+  type: constants.SELECTED_SECTION_UPDATE,
+  sectionId: number
+}
 /**
  * Actions
  */
-export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate | SelectedTopicUpdate | SelectedActivityUpdate;
+export type AppAction =  AccessTokenUpdate | LocaleUpdate | MoodleTokenUpdate | SelectedTopicUpdate | SelectedActivityUpdate | SelectedSectionUpdate;
 
 /**
  * Store update method for access token
@@ -99,5 +103,17 @@ export function selectedActivityUpdate(activityId: number): SelectedActivityUpda
   return {
     type: constants.SELECTED_ACTIVITY_UPDATE,
     activityId
+  }
+}
+
+/**
+ * Store update method for selected topic
+ * 
+ * @param locale locale
+ */
+export function selectedSectionUpdate(sectionId: number): SelectedSectionUpdate {
+  return {
+    type: constants.SELECTED_SECTION_UPDATE,
+    sectionId
   }
 }

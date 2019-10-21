@@ -41,23 +41,24 @@ export default class BasicLayout extends React.Component<Props, State> {
 
     const styles = StyleSheet.create({
       container: {
-        backgroundColor: this.props.backgroundColor
+        backgroundColor: this.props.backgroundColor,
+        flex: 1
       }
     });
 
     const content = this.props.backgroundImage ? (
       <Container style={styles.container}>
-        <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%"}}>
+        <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%", flex: 1}}>
           <Content style={{flex: 1}}>
             {this.props.children}
           </Content>
-            <Footer>
-            </Footer>
+          <FooterBar navigation={this.props.navigation}>
+        </FooterBar>
         </ImageBackground>
       </Container>
     ) : (
       <Container style={styles.container}>
-        <Content>
+        <Content style={{flex: 1}}>
           {this.props.children}
         </Content>
         <FooterBar navigation={this.props.navigation}>
@@ -66,7 +67,7 @@ export default class BasicLayout extends React.Component<Props, State> {
     );
 
     return (
-      <View style={{width: "100%", height: "100%"}}>
+      <View style={{flex: 1, width: "100%", height: "100%"}}>
         {content}
       </View>
     );

@@ -118,8 +118,8 @@ class QuizScreen extends React.Component<Props, State> {
             renderItem={({item}) =>
             <MultiChoiceAnswers  attemptId={this.state.attemptId != null ? this.state.attemptId : 0}
               moodleToken={this.props.moodleToken ? this.props.moodleToken : ""} exportCode={item.exportCode}
-            triggerAnswerSave={(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) =>
-              this.saveAnswer(value, exportCode, token, attemptId, sequencecheck)} question={item}/>}
+              triggerAnswerSave={(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) =>
+                this.saveAnswer(value, exportCode, token, attemptId, sequencecheck)} question={item}/>}
           />
           <View>
             <Button color={"#88B620"} title="Tallenna Vastaukset" onPress={() =>
@@ -147,7 +147,7 @@ class QuizScreen extends React.Component<Props, State> {
    */
   private async processAnswers(token: string, attemptid: number) {
     this.setState({loading: true});
-    const quizService = await Api.getModQuizService(HOST_URL, token);
+    const quizService = Api.getModQuizService(HOST_URL, token);
 
     quizService.processAttempt({attemptid, finishattempt: true});
 
@@ -204,12 +204,12 @@ class QuizScreen extends React.Component<Props, State> {
     const attemptData: any = await quizService.getAttemptData({attemptid: attempt.attempts[0].id, page: attempt.attempts[0].currentpage});
 
     this.setState({sequenceCheck: attemptData.sequencecheck});
-    this.setState({attemptId: attempt.attempts[0].id})
+    this.setState({attemptId: attempt.attempts[0].id});
 
     const quizHandler: QuizHandler = new QuizHandler();
 
     if (attemptData.questions) {
-      const questions = await quizHandler.getQuizObject(attemptData.questions);
+      const questions = quizHandler.getQuizObject(attemptData.questions);
 
       return questions;
     }

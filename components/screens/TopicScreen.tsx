@@ -142,8 +142,8 @@ class MainScreen extends React.Component<Props, State> {
 
   /**
    * Navigates to the pressed activity
-   * @param type 
-   * @param activityId 
+   * @param type type of activity
+   * @param activityId id of activity
    */
   private onActivityPress(type: string, activityId: number) {
     if (type === "quiz") {
@@ -153,6 +153,10 @@ class MainScreen extends React.Component<Props, State> {
     else if (type === "page") {
       this.props.onSelectedActivityUpdate(activityId);
       this.props.navigation.navigate("TextContent");
+    }
+    else if (type === "hvp") {
+      this.props.onSelectedActivityUpdate(activityId);
+      this.props.navigation.navigate("Hvp");
     }
     else {
       Alert.alert("Error", strings.unsupportedActivityTypeText);

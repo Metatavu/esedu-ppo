@@ -5,6 +5,7 @@ import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import strings from "../../localization/strings";
 import { Footer, FooterTab, Button, Icon } from "native-base";
+import { INFOPAGE_ID } from "react-native-dotenv";
 
 /**
  * Component props
@@ -36,8 +37,9 @@ const styles = StyleSheet.create({
     fontSize: 32
   }
 })
+
 /**
- * Top bar component
+ * Footer bar component
  */
 class FooterBar extends React.Component<Props, State> {
 
@@ -67,7 +69,7 @@ class FooterBar extends React.Component<Props, State> {
               <Icon type="FontAwesome" style={styles.footerIcon} name="newspaper-o" />
               <Text>{strings.newsText}</Text>
             </Button>
-            <Button vertical>
+            <Button onPress={() => this.props.navigation.navigate("TextContent", {pageId: INFOPAGE_ID})} vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="information-outline" />
               <Text>{strings.instructionsText}</Text>
             </Button>

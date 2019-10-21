@@ -13,6 +13,9 @@ import QuizScreen from "./components/screens/QuizScreen";
 import TopicScreen from "./components/screens/TopicScreen";
 import TextContentScreen from "./components/screens/TextContentScreen";
 import NewsScreen from "./components/screens/NewsScreen";
+import InfoScreen from "./components/screens/InfoScreen";
+import HvpScreen from "./components/screens/HvpScreen";
+import CourseSectionScreen from "./components/screens/CourseSectionScreen";
 
 interface State {
   authenticated: boolean
@@ -29,7 +32,10 @@ const RootStack = createStackNavigator({
   Quiz: QuizScreen,
   Topic: TopicScreen,
   TextContent: TextContentScreen,
-  News: NewsScreen
+  News: NewsScreen,
+  //Info: InfoScreen,
+  Hvp: HvpScreen,
+  Section: CourseSectionScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
