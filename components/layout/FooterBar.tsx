@@ -59,7 +59,7 @@ class FooterBar extends React.Component<Props, State> {
   public render() {
     return (
       <View style={{height: 70}}>
-        <Footer style={{height: 70}}>
+        <Footer style={{height: 70, backgroundColor: "fff"}}>
           <FooterTab style={{height: 70, backgroundColor: "#fff", borderTopColor: "#53B02B", borderTopWidth: 1.5}}>
             <Button onPress={() => this.props.navigation.navigate("Main")} vertical active={true} style={{backgroundColor: "white"}}>
               <Icon type="AntDesign" style={styles.footerIcon}  name="home" />
@@ -69,11 +69,11 @@ class FooterBar extends React.Component<Props, State> {
               <Icon type="FontAwesome" style={styles.footerIcon} name="newspaper-o" />
               <Text>{strings.newsText}</Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate("TextContent", {pageId: INFOPAGE_ID})} vertical>
+            <Button onPress={() => this.props.navigation.push("TextContent", {pageId: INFOPAGE_ID})} vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="information-outline" />
               <Text>{strings.instructionsText}</Text>
             </Button>
-            <Button onPress={() => this.props.navigation.navigate("TextContent", {pageId: GOALSPAGE_ID})} vertical>
+            <Button onPress={() => this.props.navigation.push("TextContent", {pageId: GOALSPAGE_ID})} vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="check-circle-outline" />
               <Text>{strings.goalsText}</Text>
             </Button>

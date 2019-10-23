@@ -76,7 +76,12 @@ class LoginScreen extends React.Component<Props, State> {
       />
     );
   }
-
+  /**
+   * Component did mount lifecycle event
+   */
+  public async componentDidMount() {
+    console.warn(HOST_URL);
+  }
   /**
    * Component did update lifecycle method
    * 
