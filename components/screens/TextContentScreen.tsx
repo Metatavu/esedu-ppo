@@ -89,7 +89,7 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-
+    console.warn("Text Content SCreen");
     const pageID = this.props.navigation.getParam("pageId");
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");

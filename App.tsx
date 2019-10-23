@@ -13,7 +13,6 @@ import QuizScreen from "./components/screens/QuizScreen";
 import TopicScreen from "./components/screens/TopicScreen";
 import TextContentScreen from "./components/screens/TextContentScreen";
 import NewsScreen from "./components/screens/NewsScreen";
-import InfoScreen from "./components/screens/InfoScreen";
 import HvpScreen from "./components/screens/HvpScreen";
 import CourseSectionScreen from "./components/screens/CourseSectionScreen";
 import { MenuProvider } from "react-native-popup-menu";
