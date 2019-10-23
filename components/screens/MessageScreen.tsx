@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 import TopBar from "../layout/TopBar";
-import { View, StyleSheet, Alert, WebView } from "react-native";
+import { View, StyleSheet, Alert, WebView, Text } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
@@ -9,6 +9,7 @@ import Api from "moodle-ws-client"
 import strings from "../../localization/strings";
 import { HOST_URL } from "react-native-dotenv";
 import BasicLayout from "../layout/BasicLayout";
+import { isDate } from "util";
 
 /**
  * Component props
@@ -36,6 +37,23 @@ interface State {
   pageHeader: string,
   mountedId?: number
 };
+
+interface Conversation {
+  id: number,
+  participants: User[],
+  messages: Message[]
+}
+
+interface User {
+  id: number,
+  fullname: string
+}
+
+interface Message {
+  sentbyId: number,
+  sentTime: Date,
+  text: string
+}
 
 const styles = StyleSheet.create({
   paragraph: {
@@ -88,26 +106,44 @@ class TextContentScreen extends React.Component<Props, State> {
    * Component did mount lifecycle method
    */
   public async componentDidMount() {
-    this.setState({loading: true});
-    const pageID = this.props.navigation.getParam("pageId");
     if (!this.props.moodleToken) {
-      return this.props.navigation.navigate("Login");
+        return this.props.navigation.navigate("Login");
     }
+    const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
+    const pageInfo: any = await service.coreWebserviceGetSiteInfo({});
 
-    if (pageID != null) {
-      const id = parseInt(pageID, 10);
-      const pageContent = await this.getContentPageFromMoodle(id).catch((e) => {
-        Alert.alert("Error", strings.pageContentErrorText);
-      });
-      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
-    } else if (this.props.pageid) {
-      const pageContent = await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
-        Alert.alert("Error", strings.pageContentErrorText);
-      });
-      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
-    } else {
-      Alert.alert("Error", strings.pageContentErrorText);
+    const conversations: any = await service.coreMessageGetConversations({userid: pageInfo.userid});
+
+    const conversationList: Conversation[] = [];
+
+    for (const conversation of conversations.conversations) {
+      const participants: User[] = [];
+
+      for (const user of conversation.members) {
+        const newUser: User = {
+          id: user.id,
+          fullname: user.fullname
+        }
+        participants.push(newUser);
+      }
+      const messages: Message[] = [];
+      for (const message of conversation.messages) {
+        const newMessage: Message = {
+          sentTime: message.timecreated,
+          sentbyId: message.useridfrom,
+          text: message.text
+        }
+        messages.push(newMessage);
+      }
+
+      const newCourseItem: Conversation = {
+        id: conversation.id,
+        participants,
+        messages
+      }
+      conversationList.push(newCourseItem);
     }
+    console.warn(conversationList);
   }
 
   /**
@@ -116,8 +152,8 @@ class TextContentScreen extends React.Component<Props, State> {
   public render() {
     return (
       <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
-        <View style={{flex: 1, padding: 10, justifyContent: "center", height: "100%"}}>
-          <WebView style={{flex: 1}} originWhitelist={["*"]} source={{ html: this.state.pageContent }}/>
+        <View>
+            <Text>This is a messages screen</Text>
         </View>
       </BasicLayout>
     );
@@ -130,25 +166,7 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.locale !== this.props.locale) {
-      this.props.navigation.navigate("TextContent");
-    }
-  }
-
-  /**
-   * Method gets text page from moodle API
-   * 
-   * @param pageid content page id to fetch
-   */
-  public async getContentPageFromMoodle(pageid: number) {
-    if (this.props.moodleToken && this.props.courseid) {
-      const pageService = Api.getModPageService(HOST_URL, this.props.moodleToken);
-      const pageList: any = await pageService.getPagesByCourses({courseids: [this.props.courseid]});
-
-      for (const page of pageList.pages) {
-        if (parseInt(page.coursemodule, 10) === pageid) {
-          return page;
-        }
-      }
+      this.props.navigation.navigate("Message");
     }
   }
 }
