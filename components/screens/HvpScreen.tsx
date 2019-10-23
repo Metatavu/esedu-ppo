@@ -91,7 +91,6 @@ class HvpScreen extends React.Component<Props, State> {
       Alert.alert("Error", strings.pageContentErrorText);
     });
     if (hvpUrl) {
-      console.warn(hvpUrl);
       this.setState({hvpUrl})
       this.setState({loading: false});
     }
@@ -114,8 +113,6 @@ class HvpScreen extends React.Component<Props, State> {
    * @param id hvp id @param token moodle token
    */
   private async getHvpUrl(id: number, token: string) {
-
-    console.warn(id, token);
     const moodleService = Api.getMoodleService(HOST_URL, token);
     const siteInfo: any = await moodleService.coreWebserviceGetSiteInfo({});
     if (!siteInfo.userid) {

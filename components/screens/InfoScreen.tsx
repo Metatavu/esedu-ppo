@@ -73,7 +73,6 @@ class InfoScreen extends React.Component<Props, State> {
     if (!this.props.moodleToken || !INFOPAGE_ID) {
       return this.props.navigation.navigate("Login");
     }
-    console.warn(INFOPAGE_ID);
     const pageContent: any = await this.getContentPageFromMoodle(INFOPAGE_ID).catch((e) => {
       Alert.alert("Error", strings.pageContentErrorText);
     });

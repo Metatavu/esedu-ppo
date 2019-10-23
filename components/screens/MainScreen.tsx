@@ -85,7 +85,6 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
-    console.warn(COURSE_IDS);
     const courseSections = await this.getCoursesFromMoodle(COURSE_IDS.split(",")).catch((e) => {
       this.setState({loading: false, error: true});
       Alert.alert("Error", "Error getting courses");
@@ -159,7 +158,6 @@ class MainScreen extends React.Component<Props, State> {
    * @param topic topic pressed by the user
    */
   private onTopicPress(section: CourseSection) {
-    console.warn("Selected section: ", section.id);
     this.props.onSelectedSectionUpdate(section.id);
     this.props.navigation.navigate("Section");
   }
