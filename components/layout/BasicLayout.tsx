@@ -43,6 +43,14 @@ export default class BasicLayout extends React.Component<Props, State> {
       container: {
         backgroundColor: this.props.backgroundColor,
         flex: 1
+      },
+      bottom: {
+        flex: 1,
+        justifyContent: "flex-end",
+        marginBottom: 0
+      },
+      content: {
+        marginBottom: 75
       }
     });
 
@@ -58,11 +66,13 @@ export default class BasicLayout extends React.Component<Props, State> {
       </Container>
     ) : (
       <Container style={styles.container}>
-        <Content style={{flex: 1}}>
+        <View style={[StyleSheet.absoluteFill, styles.content]}>
           {this.props.children}
-        </Content>
-        <FooterBar navigation={this.props.navigation}>
-        </FooterBar>
+        </View>
+        <View style={styles.bottom}>
+          <FooterBar navigation={this.props.navigation}>
+          </FooterBar>
+        </View>
       </Container>
     );
 

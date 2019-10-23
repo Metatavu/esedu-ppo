@@ -2,7 +2,7 @@ import React, { Dispatch } from "react";
 import { connect } from "react-redux";
 import { AccessToken, StoreState } from "../../types";
 import * as actions from "../../actions";
-import { WebView, NavState, Alert, View } from "react-native";
+import { WebView, NavState, Alert, View, StyleSheet } from "react-native";
 import Api from "moodle-ws-client";
 import { HOST_URL, INFOPAGE_ID } from "react-native-dotenv";
 import strings from "../../localization/strings";
@@ -64,18 +64,16 @@ class HvpScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    if (!this.state.loading) {
-      return (
-        <WebView
-          source={{ uri: `${HOST_URL}${this.state.hvpUrl}`}}
-          style={{ marginTop: 20 }}
-        />
-      );
-    }
     return (
-      <BasicLayout backgroundColor="#fff" loading={true}>
+      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
+        <View style={StyleSheet.absoluteFill}>
+          <WebView
+            source={{ uri: `${HOST_URL}${this.state.hvpUrl}`}}
+            style={StyleSheet.absoluteFill}
+          />
+        </View>
       </BasicLayout>
-    )
+    );
   }
 
   /**

@@ -8,6 +8,7 @@ import { HeaderProps } from "react-navigation";
 import Api from "moodle-ws-client"
 import strings from "../../localization/strings";
 import { HOST_URL } from "react-native-dotenv";
+import BasicLayout from "../layout/BasicLayout";
 
 /**
  * Component props
@@ -32,7 +33,8 @@ interface State {
   attemptId?: number,
   sequenceCheck?: number,
   pageContent: string,
-  pageHeader: string
+  pageHeader: string,
+  mountedId?: number
 };
 
 const styles = StyleSheet.create({
@@ -89,7 +91,6 @@ class TextContentScreen extends React.Component<Props, State> {
     this.setState({loading: true});
 
     const pageID = this.props.navigation.getParam("pageId");
-
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
@@ -115,9 +116,11 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public render() {
     return (
+      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
         <View style={{flex: 1, padding: 10, justifyContent: "center", height: "100%"}}>
           <WebView style={{flex: 1}} originWhitelist={["*"]} source={{ html: this.state.pageContent }}/>
         </View>
+      </BasicLayout>
     );
   }
 
