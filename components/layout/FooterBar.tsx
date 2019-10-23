@@ -5,7 +5,7 @@ import { StoreState, AccessToken } from "../../types";
 import * as actions from "../../actions";
 import strings from "../../localization/strings";
 import { Footer, FooterTab, Button, Icon } from "native-base";
-import { INFOPAGE_ID } from "react-native-dotenv";
+import { INFOPAGE_ID, GOALSPAGE_ID } from "react-native-dotenv";
 
 /**
  * Component props
@@ -73,7 +73,7 @@ class FooterBar extends React.Component<Props, State> {
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="information-outline" />
               <Text>{strings.instructionsText}</Text>
             </Button>
-            <Button vertical>
+            <Button onPress={() => this.props.navigation.navigate("TextContent", {pageId: GOALSPAGE_ID})} vertical>
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="check-circle-outline" />
               <Text>{strings.goalsText}</Text>
             </Button>

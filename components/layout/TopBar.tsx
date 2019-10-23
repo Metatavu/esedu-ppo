@@ -7,6 +7,7 @@ import strings from "../../localization/strings";
 import { NavigationActions, StackActions } from "react-navigation";
 import { EseduLogo } from "../../static/icons/index";
 import { Icon } from "native-base";
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 
 /**
  * Component props
@@ -68,9 +69,20 @@ class TopBar extends React.Component<Props, State> {
               </Text>
             }
             {this.props.showLogout &&
-              <Text onPress={() => this.logout()} style={{color: this.props.textColor || "black", padding: 20}}>
-                {strings.logoutText}
-              </Text>
+              <Menu>
+              <MenuTrigger>
+                <Icon style={{fontSize: 32, padding: 20}} name="menu"></Icon>
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption onSelect={() => this.toggleLocale()}>
+                  <Text>Language</Text>
+                </MenuOption>
+                <MenuOption >
+                  <Text>Logout</Text>
+                </MenuOption>
+                <MenuOption />
+              </MenuOptions>
+            </Menu>
             }
             {this.props.showBack &&
             <TouchableOpacity style={{padding: 20}} onPress={() => this.props.navigation.goBack()}>

@@ -16,6 +16,7 @@ import NewsScreen from "./components/screens/NewsScreen";
 import InfoScreen from "./components/screens/InfoScreen";
 import HvpScreen from "./components/screens/HvpScreen";
 import CourseSectionScreen from "./components/screens/CourseSectionScreen";
+import { MenuProvider } from "react-native-popup-menu";
 
 interface State {
   authenticated: boolean
@@ -33,7 +34,6 @@ const RootStack = createStackNavigator({
   Topic: TopicScreen,
   TextContent: TextContentScreen,
   News: NewsScreen,
-  //Info: InfoScreen,
   Hvp: HvpScreen,
   Section: CourseSectionScreen
 }, {
@@ -62,8 +62,10 @@ export default class App extends React.Component<any, State> {
   public render() {
     return (
       <Provider store={store}>
+        <MenuProvider>
         <AppContainer />
         <AuthRefresh />
+        </MenuProvider>
       </Provider>
     );
   }
