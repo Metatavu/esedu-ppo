@@ -85,9 +85,10 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
+    console.warn(COURSE_IDS);
     const courseSections = await this.getCoursesFromMoodle(COURSE_IDS.split(",")).catch((e) => {
       this.setState({loading: false, error: true});
-      Alert.alert("Error", "Error in main");
+      Alert.alert("Error", "Error getting courses");
     });
     this.setState({courseSections});
     this.setState({loading: false});
@@ -138,11 +139,6 @@ class MainScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Login");
     }
     const moodleService = Api.getMoodleService(HOST_URL, this.props.moodleToken);
-    const options = {
-      options: {
-      ids: courseIds
-
-    }};
     const courses: any = await moodleService.coreCourseGetCoursesByField({field: "ids", value: courseIds.toString()});
 
     const courseSections: CourseSection[] = [];
@@ -163,6 +159,7 @@ class MainScreen extends React.Component<Props, State> {
    * @param topic topic pressed by the user
    */
   private onTopicPress(section: CourseSection) {
+    console.warn("Selected section: ", section.id);
     this.props.onSelectedSectionUpdate(section.id);
     this.props.navigation.navigate("Section");
   }

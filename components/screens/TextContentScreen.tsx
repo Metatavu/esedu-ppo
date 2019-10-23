@@ -94,8 +94,11 @@ class TextContentScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Login");
     }
 
+    console.warn(pageID, this.props.pageid);
+
     if (pageID != null) {
       const id = parseInt(pageID, 10);
+      console.warn("Getting page:", id);
       const pageContent = await this.getContentPageFromMoodle(id).catch((e) => {
         Alert.alert("Error", strings.pageContentErrorText);
       });
@@ -128,7 +131,7 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.locale !== this.props.locale) {
-     // this.props.navigation.navigate('Main');
+      this.props.navigation.navigate("TextContent");
     }
   }
 

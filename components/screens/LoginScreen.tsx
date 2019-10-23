@@ -4,6 +4,7 @@ import { AccessToken, StoreState } from "../../types";
 import * as actions from "../../actions";
 import { WebView, NavState } from "react-native";
 import { Buffer } from "buffer";
+import { HOST_URL } from "react-native-dotenv";
 
 /**
  * Login details
@@ -69,13 +70,19 @@ class LoginScreen extends React.Component<Props, State> {
   public render() {
     return (
       <WebView
-        source={{ uri: "https://ppo-test.metatavu.io/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme="}}
+        source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme=`}}
         style={{ marginTop: 20 }}
         onNavigationStateChange={this.onNavigation}
       />
     );
   }
 
+  /**
+   * Component did mount lifecycle event
+   */
+  public async componentDidMount() {
+    console.warn(HOST_URL);
+  }
   /**
    * Component did update lifecycle method
    * 
@@ -110,6 +117,11 @@ class LoginScreen extends React.Component<Props, State> {
    * Monitors the webview navigation, grabs the token and navigates to main page
    */
   private onNavigation = (event: NavState) => {
+    /*
+    const token = this.getTokenFromUrl("https://moodle.esedu.fi/admin/tool/mobile/://token=ZmE4MTkyMGYzNDkxYmNjNTAwODRiM2Q3MzYzMDdhNGM6OjoxNWIxZDZmMGY5NjZlMGQ5ZmZlYjNjNjkwNjkyYTI5OTo6OlhxVTFoM0ZNV0hLT09vU0xySzJtcHI1WFdHeG5GbjRxVVV3V29kMlNWcnJ5bGZzaE5veUVhbENlQXlDZHZUQ3o=");
+    this.props.onMoodleTokenUpdate(token);
+    this.props.navigation.replace("Main");
+    */
     if (!event.url || event.url.indexOf("token=") === -1) {
       return;
     }

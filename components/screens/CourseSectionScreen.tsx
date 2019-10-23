@@ -78,7 +78,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar showBack={false} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -90,6 +90,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Main");
     }
     this.setState({loading: true});
+    console.warn("Getting topics for course: ", this.props.courseid);
     const courseContent = await this.getTopicsFromMoodle(this.props.courseid).catch((e) => {
       this.setState({loading: false, error: true});
       Alert.alert("Error", strings.mainScreenErrorText);
@@ -105,7 +106,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.locale !== this.props.locale) {
-      this.props.navigation.navigate("Main");
+      this.props.navigation.navigate("Section");
     }
   }
 

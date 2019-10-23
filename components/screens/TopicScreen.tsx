@@ -106,7 +106,7 @@ class MainScreen extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.locale !== this.props.locale) {
-      this.props.navigation.navigate("Main");
+      this.props.navigation.navigate("Topic");
     }
   }
 

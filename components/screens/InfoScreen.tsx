@@ -74,7 +74,7 @@ class InfoScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Login");
     }
     console.warn(INFOPAGE_ID);
-    const pageContent: any = await this.getContentPageFromMoodle(13).catch((e) => {
+    const pageContent: any = await this.getContentPageFromMoodle(INFOPAGE_ID).catch((e) => {
       Alert.alert("Error", strings.pageContentErrorText);
     });
     this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
@@ -113,7 +113,7 @@ class InfoScreen extends React.Component<Props, State> {
       const pageList: any = await pageService.getPagesByCourses({courseids: [COURSE_IDS]});
 
       for (const page of pageList.pages) {
-        if (page.coursemodule === pageid) {
+        if (page.coursemodule == pageid) {
           return page;
         }
       }

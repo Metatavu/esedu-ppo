@@ -87,7 +87,7 @@ class QuizScreen extends React.Component<Props, State> {
   public async componentDidMount() {
     this.setState({loading: true});
     if (!this.props.moodleToken) {
-      this.props.navigation.navigate("Login");
+      this.props.navigation.navigate("Quiz");
     }
 
     await this.getQuestionsFromMoodle(6, 0).catch((e) => {
