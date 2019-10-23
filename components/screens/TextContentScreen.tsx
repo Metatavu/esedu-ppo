@@ -94,11 +94,8 @@ class TextContentScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("Login");
     }
 
-    console.warn(pageID, this.props.pageid);
-
     if (pageID != null) {
       const id = parseInt(pageID, 10);
-      console.warn("Getting page:", id);
       const pageContent = await this.getContentPageFromMoodle(id).catch((e) => {
         Alert.alert("Error", strings.pageContentErrorText);
       });

@@ -78,12 +78,6 @@ class LoginScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Component did mount lifecycle event
-   */
-  public async componentDidMount() {
-    console.warn(HOST_URL);
-  }
-  /**
    * Component did update lifecycle method
    * 
    * @param prevProps previous properties
@@ -117,11 +111,6 @@ class LoginScreen extends React.Component<Props, State> {
    * Monitors the webview navigation, grabs the token and navigates to main page
    */
   private onNavigation = (event: NavState) => {
-    /*
-    const token = this.getTokenFromUrl("https://moodle.esedu.fi/admin/tool/mobile/://token=ZmE4MTkyMGYzNDkxYmNjNTAwODRiM2Q3MzYzMDdhNGM6OjoxNWIxZDZmMGY5NjZlMGQ5ZmZlYjNjNjkwNjkyYTI5OTo6OlhxVTFoM0ZNV0hLT09vU0xySzJtcHI1WFdHeG5GbjRxVVV3V29kMlNWcnJ5bGZzaE5veUVhbENlQXlDZHZUQ3o=");
-    this.props.onMoodleTokenUpdate(token);
-    this.props.navigation.replace("Main");
-    */
     if (!event.url || event.url.indexOf("token=") === -1) {
       return;
     }
