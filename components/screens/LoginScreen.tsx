@@ -68,6 +68,7 @@ class LoginScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
+    console.warn(HOST_URL);
     return (
       <WebView
         source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme=`}}
@@ -76,12 +77,7 @@ class LoginScreen extends React.Component<Props, State> {
       />
     );
   }
-  /**
-   * Component did mount lifecycle event
-   */
-  public async componentDidMount() {
-    console.warn(HOST_URL);
-  }
+
   /**
    * Component did update lifecycle method
    * 

@@ -77,7 +77,7 @@ class FooterBar extends React.Component<Props, State> {
               <Icon type="MaterialCommunityIcons" style={styles.footerIcon}  name="check-circle-outline" />
               <Text>{strings.goalsText}</Text>
             </Button>
-            <Button vertical>
+            <Button onPress={() => this.props.navigation.navigate("Message")} vertical>
               <Icon type="MaterialIcons" style={styles.footerIcon} name="chat-bubble-outline" />
               <Text>{strings.chatText}</Text>
             </Button>

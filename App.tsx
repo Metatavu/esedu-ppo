@@ -16,6 +16,7 @@ import NewsScreen from "./components/screens/NewsScreen";
 import HvpScreen from "./components/screens/HvpScreen";
 import CourseSectionScreen from "./components/screens/CourseSectionScreen";
 import { MenuProvider } from "react-native-popup-menu";
+import MessageScreen from "./components/screens/MessageScreen";
 
 interface State {
   authenticated: boolean
@@ -34,7 +35,8 @@ const RootStack = createStackNavigator({
   TextContent: TextContentScreen,
   News: NewsScreen,
   Hvp: HvpScreen,
-  Section: CourseSectionScreen
+  Section: CourseSectionScreen,
+  Message: MessageScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {
