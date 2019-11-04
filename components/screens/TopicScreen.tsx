@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     color: "white",
     paddingLeft: 10
   }
-})
+});
 
 /**
  * Component for application main screen
