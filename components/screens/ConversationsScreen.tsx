@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     paddingLeft: 5
   },
   listIcon: {
-      color: "#88B620",
-      fontSize: 32
+    color: "#88B620",
+    fontSize: 32
   }
 });
 
@@ -173,8 +173,8 @@ class ConversationsScreen extends React.Component<Props, State> {
         data={this.state.conversations}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onConversationPress(item)}>
-          <View style={[defaultStyles.topicItemBase]}>
-            <Image style={defaultStyles.taskIcon} source={{ uri: item.participants[0].avatar }}/>
+          <View style={defaultStyles.topicItemBase}>
+            <Image resizeMode={"contain"} style={[defaultStyles.taskIcon]} source={{ uri: item.participants[0].avatar }}/>
             <View style={styles.messageContainer}>
               <Text style={[defaultStyles.topicItemText, styles.messageText]}>{item.messages[0].text}</Text>
               <Text style={[defaultStyles.topicItemText, styles.messageUser]}>{item.participants[0].name}</Text>
@@ -209,7 +209,6 @@ class ConversationsScreen extends React.Component<Props, State> {
    * Navigates to a new conversation
    */
   private onNewConversationPress() {
-    console.warn("AAAAAA");
     this.props.navigation.navigate("NewConversation");
   }
 }
