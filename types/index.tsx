@@ -98,3 +98,30 @@ export interface NewsItem {
   author: string
   dateModified: Date
 };
+
+/**
+ * Interface describing conversations
+ */
+export interface Conversation {
+  id: number,
+  participants: Participant[],
+  messages: Message[]
+}
+
+/**
+ * Interface describing conversations participants
+ */
+export interface Participant {
+  _id: number,
+  name: string,
+  avatar: string
+}
+
+/**
+ * Interface describing conversations messages
+ */
+export interface Message {
+  sentbyId: number,
+  sentTime: Date,
+  text: string
+}

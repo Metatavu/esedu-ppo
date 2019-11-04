@@ -11,6 +11,7 @@ import { Alert } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import strings from "../../localization/strings";
+import TextCleanup from "../../utils/TextCleanup";
 
 /**
  * Component props
@@ -98,23 +99,14 @@ class NewsScreen extends React.Component<Props, State> {
         renderItem={({item}) =>
           <View style={{margin: 10}}>
             <Text style={defaultStyles.newsHeadline}>{item.title}</Text>
-            <Text style={{margin: 10}}>{this.cleanUpText(item.text)}</Text>
-            <Text style={defaultStyles.newsFooterText}>{this.cleanUpText(item.author)} {item.dateModified.toLocaleDateString()}</Text>
+            <Text style={{margin: 10}}>{TextCleanup.cleanUpText(item.text)}</Text>
+            <Text style={defaultStyles.newsFooterText}>{TextCleanup.cleanUpText(item.author)} {item.dateModified.toLocaleDateString()}</Text>
           </View>
           }
         keyExtractor={(item, index) => index.toString()}
         />
       </BasicLayout>
     );
-  }
-
-  /**
-   * Removes html markings from string.
-   * @param text string to clean
-   */
-  private cleanUpText(text: string) {
-    text = text.replace("</p>", " ");
-    return text.replace(/<\/?[^>]+(>|$)/g, "");
   }
 
   /**
