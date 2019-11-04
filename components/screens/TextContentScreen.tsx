@@ -145,7 +145,7 @@ class TextContentScreen extends React.Component<Props, State> {
       const pageList: any = await pageService.getPagesByCourses({courseids: [this.props.courseid]});
 
       for (const page of pageList.pages) {
-        if (parseInt(page.coursemodule, 10) === pageid) {
+        if (parseInt(page.coursemodule, 10) == pageid) {
           return page;
         }
       }

@@ -8,10 +8,11 @@ import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import strings from "../../localization/strings";
+import * as icons from "../../static/icons/index";
 
 /**
  * Component props
@@ -116,8 +117,7 @@ class MainScreen extends React.Component<Props, State> {
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onTopicPress(item)}>
           <View style={defaultStyles.topicItemBase}>
-            <Icon containerStyle={defaultStyles.taskIcon} size={46} name="trophy" type="evilicon" color="white"/>
-            <View style={defaultStyles.topicTaskIconBackground}/>
+            <Image source={item.icon} resizeMode={"contain"} style={defaultStyles.taskIcon}/>
             <Text style={[defaultStyles.topicItemText, styles.itemActiveText]}>{item.sectionName}</Text>
             <Icon containerStyle={defaultStyles.progressIcon} color="#fff" size={50} name="arrow-right" type="evilicon"/>
           </View>
@@ -142,10 +142,36 @@ class MainScreen extends React.Component<Props, State> {
 
     const courseSections: CourseSection[] = [];
 
+    console.warn("Course id0: ", typeof(courseIds[0]));
+
     for (const section of courses.courses) {
+      let icon: any;
+
+      switch (section.id.toString()) {
+        case courseIds[0]:
+          icon = icons.AsiakaskokemusIcon
+          break;
+        case courseIds[1]:
+          icon = icons.AsiakastyytyvaisyysIcon
+          break;
+        case courseIds[2]:
+          icon = icons.PalvelutilanteetIcon
+          break;
+        case courseIds[3]:
+          icon = icons.PalvelutilanteetIcon
+          break;
+        case courseIds[4]:
+          icon = icons.PalvelutilanteetIcon
+          break;
+        case courseIds[4]:
+          icon = icons.PalvelutilanteetIcon
+          break;
+      }
+
       const newCourseSection: CourseSection = {
         id: section.id,
-        sectionName: section.fullname
+        sectionName: section.fullname,
+        icon : icon
       }
       courseSections.push(newCourseSection)
     }

@@ -12,7 +12,6 @@ interface Props {
 }
 
 interface State {
-
 }
 
 export default class BasicLayout extends React.Component<Props, State> {

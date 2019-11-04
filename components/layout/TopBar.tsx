@@ -69,9 +69,9 @@ class TopBar extends React.Component<Props, State> {
               </Text>
             }
             {this.props.showLogout &&
-              <Menu>
+            <Menu>
               <MenuTrigger>
-                <Icon style={{fontSize: 32, padding: 20}} name="menu"></Icon>
+                <Icon style={{fontSize: 40, padding: 20, color: "#10511E"}} color="#10511E" name="menu"></Icon>
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption onSelect={() => this.toggleLocale()}>
@@ -89,9 +89,6 @@ class TopBar extends React.Component<Props, State> {
               <Icon name="arrow-back" type="MaterialIcons"/>
             </TouchableOpacity>
             }
-          </View>
-          <View style={{flex: 1, justifyContent: "center", height: 100, width: "100%", position: "absolute", alignItems: "center"}}>
-              <Image source={EseduLogo} style={{width: 50, height: 50}}/>
           </View>
         </View>
       </View>

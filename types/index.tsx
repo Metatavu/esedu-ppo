@@ -77,6 +77,7 @@ export interface CourseTopic {
 export interface CourseSection {
   id: number,
   sectionName: string,
+  icon: any
 }
 
 /**
