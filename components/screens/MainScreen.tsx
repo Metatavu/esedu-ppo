@@ -11,7 +11,6 @@ import Api from "moodle-ws-client";
 import { StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
-import strings from "../../localization/strings";
 import * as icons from "../../static/icons/index";
 
 /**
@@ -86,9 +85,11 @@ class MainScreen extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     this.setState({loading: true});
+
+    console.warn(COURSE_IDS.split(","));
     const courseSections = await this.getCoursesFromMoodle(COURSE_IDS.split(",")).catch((e) => {
       this.setState({loading: false, error: true});
-      Alert.alert("Error", "Error getting courses");
+      Alert.alert("Error", "Error getting courses", e);
     });
     this.setState({courseSections});
     this.setState({loading: false});
@@ -116,13 +117,16 @@ class MainScreen extends React.Component<Props, State> {
         data={this.state.courseSections}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onTopicPress(item)}>
-          <View style={defaultStyles.topicItemBase}>
-            <Image source={item.icon} resizeMode={"contain"} style={defaultStyles.taskIcon}/>
-            <Text style={[defaultStyles.topicItemText, styles.itemActiveText]}>{item.sectionName}</Text>
+          <View style={defaultStyles.listItemBase}>
+            <Image style={defaultStyles.taskIcon} source={item.icon} resizeMode={"contain"}/>
+            <View style={defaultStyles.listTextContainer}>
+              <Text style={[defaultStyles.listItemText]}>{item.sectionName}</Text>
+            </View>
             <Icon containerStyle={defaultStyles.progressIcon} color="#fff" size={50} name="arrow-right" type="evilicon"/>
           </View>
         </TouchableOpacity>}
         keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={ <View style={{ margin: 25 }} /> }
         />
       </BasicLayout>
     );
@@ -133,20 +137,24 @@ class MainScreen extends React.Component<Props, State> {
    * 
    * @param courseId course id to get topics by
    */
-  private async getCoursesFromMoodle(courseIds: number[]) {
+  private async getCoursesFromMoodle(courseIds: string[]) {
     if (!this.props.moodleToken) {
       return this.props.navigation.navigate("Login");
     }
     const moodleService = Api.getMoodleService(HOST_URL, this.props.moodleToken);
+
     const courses: any = await moodleService.coreCourseGetCoursesByField({field: "ids", value: courseIds.toString()});
 
     const courseSections: CourseSection[] = [];
 
-    console.warn("Course id0: ", typeof(courseIds[0]));
+    const info: any = await moodleService.coreWebserviceGetSiteInfo({});
+
+    const courseCompletion: any = await moodleService.coreCompletionGetActivitiesCompletionStatus({courseid: 2, userid: 7}).catch((e) => {
+      console.warn(e);
+    });
 
     for (const section of courses.courses) {
       let icon: any;
-
       switch (section.id.toString()) {
         case courseIds[0]:
           icon = icons.AsiakaskokemusIcon
@@ -158,20 +166,20 @@ class MainScreen extends React.Component<Props, State> {
           icon = icons.PalvelutilanteetIcon
           break;
         case courseIds[3]:
-          icon = icons.PalvelutilanteetIcon
+          icon = icons.HaasteellisetIcon
           break;
         case courseIds[4]:
-          icon = icons.PalvelutilanteetIcon
+          icon = icons.MinaAsiakasIcon
           break;
-        case courseIds[4]:
-          icon = icons.PalvelutilanteetIcon
+        case courseIds[5]:
+          icon = icons.SosiaalinenIcon
           break;
       }
 
       const newCourseSection: CourseSection = {
         id: section.id,
         sectionName: section.fullname,
-        icon : icon
+        icon
       }
       courseSections.push(newCourseSection)
     }

@@ -45,44 +45,6 @@ interface GiftedChatMessage {
   user: Participant
 }
 
-const styles = StyleSheet.create({
-  listContainer: {
-    marginTop: 25,
-    marginHorizontal: 10
-  },
-  messageUser: {
-    padding: 0,
-    height: 25,
-    fontSize: 20,
-    //backgroundColor: "#53B02B",
-    alignItems: "flex-start",
-    flexDirection: "row",
-    textAlignVertical: "center",
-    textAlign: "left"
-  },
-  messageText: {
-    textAlignVertical: "top",
-    fontSize: 18,
-    width: 275,
-    height: 30,
-    fontFamily: "sans-serif-condensed",
-    fontWeight: "400",
-    color: "white"
-  },
-  iconBackgroundAdjust: {
-    marginTop: 25
-  },
-  activityText: {
-    color: "black",
-    paddingLeft: 10
-  },
-  messageContainer: {
-    flex: 1,
-    flexDirection: "column",
-    paddingLeft: 5
-  }
-});
-
 /**
  * Component for application MessageScreen
  */
@@ -246,7 +208,6 @@ class MessengerScreen extends React.Component<Props, State> {
 
       const sentMessageResponse: any = await service.coreMessageSendInstantMessages(messageDetails);
 
-      console.warn(sentMessageResponse[0].conversationid);
       this.setState({conversationId: sentMessageResponse[0].conversationid});
     } else if (this.state.conversationId) {
 

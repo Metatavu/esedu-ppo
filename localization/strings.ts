@@ -18,7 +18,12 @@ export interface Strings extends LocalizedStringsMethods {
   newsText: string,
   instructionsText: string,
   goalsText: string,
-  chatText: string
+  chatText: string,
+  uploadFailedError: string,
+  fileTooLargeError: string,
+  errorSavingSubmission: string,
+  deadline: string
+  submissionSent: string
 }
 
 const strings: Strings = new LocalizedStrings({

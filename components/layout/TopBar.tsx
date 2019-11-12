@@ -55,7 +55,7 @@ class TopBar extends React.Component<Props, State> {
   public render() {
     return (
       <View style={{flex: 1}}>
-        <View style={{height: 100}}>
+        <View style={{flex: 1}}>
           <View style={{flex: 1, flexDirection: "row-reverse", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
             {this.props.showHeader &&
               <Text style={this.props.header &&
