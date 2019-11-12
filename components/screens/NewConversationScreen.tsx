@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 import TopBar from "../layout/TopBar";
-import { View, StyleSheet, Alert, WebView, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Alert, WebView, Text, TouchableOpacity, Image } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
@@ -9,7 +9,7 @@ import Api from "moodle-ws-client"
 import { HOST_URL } from "react-native-dotenv";
 import BasicLayout from "../layout/BasicLayout";
 import defaultStyles from "../../styles/default-styles";
-import { Image } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import TextCleanup from "../../utils/TextCleanup";
 import { Conversation, Participant, Message } from "../../types";
 import { GiftedChat } from "react-native-gifted-chat";
@@ -38,6 +38,16 @@ interface State {
 };
 
 const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderRadius: 7,
+    borderColor: "#000",
+    margin: 15,
+    marginBottom: 0,
+    padding: 10,
+    alignItems: "center"
+  },
   listContainer: {
     marginTop: 25,
     marginHorizontal: 10
@@ -136,19 +146,22 @@ class NewConversationScreen extends React.Component<Props, State> {
   public render() {
     return (
       <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          onChangeText={(text) => this.onChangeText(text)}
-        />
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={{flex: 1}}
+            onChangeText={(text) => this.onChangeText(text)}
+          />
+          <Icon name="search" color="gray" size={25}/>
+        </View>
         <FlatList
-        style={styles.listContainer}
+        style={defaultStyles.listContainer}
         data={this.state.searchResults}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onNewConversationSelect(item)}>
-          <View style={[defaultStyles.topicItemBase]}>
-            <Image style={defaultStyles.taskIcon} source={{ uri: item.avatar }}/>
-            <View style={styles.messageContainer}>
-              <Text style={[defaultStyles.topicItemText, styles.messageText]}>{item.name}</Text>
+          <View style={defaultStyles.listItemBase}>
+            <Image style={defaultStyles.taskIcon} source={{uri: item.avatar}} resizeMode={"contain"}/>
+            <View style={defaultStyles.listTextContainer}>
+              <Text style={defaultStyles.listItemText}>{item.name}</Text>
             </View>
           </View>
         </TouchableOpacity>}

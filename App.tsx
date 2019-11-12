@@ -19,6 +19,8 @@ import { MenuProvider } from "react-native-popup-menu";
 import MessengerScreen from "./components/screens/MessengerScreen";
 import ConversationsScreen from "./components/screens/ConversationsScreen";
 import NewConversationScreen from "./components/screens/NewConversationScreen";
+import AssignmentScreen from "./components/screens/AssignmentScreen";
+import DropdownAlert from "react-native-dropdownalert";
 
 interface State {
   authenticated: boolean
@@ -40,7 +42,8 @@ const RootStack = createStackNavigator({
   Section: CourseSectionScreen,
   Conversations: ConversationsScreen,
   Messenger: MessengerScreen,
-  NewConversation: NewConversationScreen
+  NewConversation: NewConversationScreen,
+  Assignment: AssignmentScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {

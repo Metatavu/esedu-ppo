@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   footerText: {
-    color: "#10511E"
+    color: "#10511E",
+    fontSize: 12
   }
 })
 
@@ -73,14 +74,14 @@ class FooterBar extends React.Component<Props, State> {
     },
     {
       text: strings.instructionsText,
-      image: this.props.navigation.state.routeName === "TextContent" && this.props.navigation.getParam("pageId").toString() === INFOPAGE_ID ?
+      image: this.props.navigation.state.routeName === "TextContent" && this.props.navigation.getParam("pageId") === INFOPAGE_ID ?
       Icons.OhjeetActiveIcon : Icons.OhjeetIcon,
       screen: "TextContent",
       pageId: INFOPAGE_ID
     },
     {
       text: strings.goalsText,
-      image: this.props.navigation.state.routeName === "TextContent" && this.props.navigation.getParam("pageId").toString() === GOALSPAGE_ID ?
+      image: this.props.navigation.state.routeName === "TextContent" && this.props.navigation.getParam("pageId") === GOALSPAGE_ID ?
       Icons.TavoitteetActiveIcon : Icons.TavoitteetIcon,
       screen: "TextContent",
       pageId: GOALSPAGE_ID

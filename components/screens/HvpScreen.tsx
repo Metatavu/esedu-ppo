@@ -111,11 +111,13 @@ class HvpScreen extends React.Component<Props, State> {
    * @param id hvp id @param token moodle token
    */
   private async getHvpUrl(id: number, token: string) {
+    console.warn(id, token);
     const moodleService = Api.getMoodleService(HOST_URL, token);
     const siteInfo: any = await moodleService.coreWebserviceGetSiteInfo({});
     if (!siteInfo.userid) {
       throw new Error("User not found");
     }
+    console.warn(siteInfo);
     return `/mod/hvp/embed.php?id=${id}&user_id=${siteInfo.userid}`;
   }
 }

@@ -7,9 +7,13 @@ import { StoreState, CourseTopic } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import strings from "../../localization/strings";
+import * as icons from "../../static/icons/index";
+//To be removed
+import Api from "moodle-ws-client";
+import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 
 /**
  * Component props
@@ -18,6 +22,7 @@ interface Props {
   navigation: any,
   locale: string,
   selectedTopic?: CourseTopic,
+  moodleToken?: string,
   onSelectedActivityUpdate: (activityId: number) => void
 };
 
@@ -27,32 +32,13 @@ interface Props {
 interface State {
   loading: boolean,
   error: boolean,
-  courseContent: CourseTopic[]
+  courseContent: CourseTopic[],
 };
 
 const styles = StyleSheet.create({
   listContainer: {
     marginTop: 25,
     marginHorizontal: 10
-  },
-  topicHeadline: {
-    padding: 10,
-    height: 100,
-    backgroundColor: "#53B02B",
-    alignItems: "flex-start",
-    flexDirection: "row",
-    textAlignVertical: "center",
-    textAlign: "center"
-  },
-  topicHeadlineText: {
-    textAlignVertical: "center",
-    margin: 10,
-    fontSize: 18,
-    width: 275,
-    height: 60,
-    fontFamily: "sans-serif-condensed",
-    fontWeight: "400",
-    color: "white"
   },
   iconBackgroundAdjust: {
     marginTop: 25
@@ -117,18 +103,20 @@ class MainScreen extends React.Component<Props, State> {
     if (this.props.selectedTopic) {
       return (
         <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
-            <View style={styles.topicHeadline}>
-              <Icon containerStyle={defaultStyles.taskIcon} size={46} name="eye" type="evilicon" color="white"/>
-                <View style={[defaultStyles.topicTaskIconBackground, styles.iconBackgroundAdjust]}/>
-              <Text style={[styles.topicHeadlineText]}>{this.props.selectedTopic.topicName}</Text>
-            </View>
+          <View style={defaultStyles.topicHeadline}>
+            <Image source={icons.PalvelutilanteetIcon} style={defaultStyles.taskIcon} />
+            <Text style={[defaultStyles.topicHeadlineText]}>{this.props.selectedTopic.topicName}</Text>
+          </View>
           <FlatList
           style={styles.listContainer}
           data={this.props.selectedTopic.topicContent}
           renderItem={({item}) =>
           <TouchableOpacity onPress= {() => this.onActivityPress(item.type, item.activityId)}>
-            <View style={item.active ? defaultStyles.topicItemBase : [defaultStyles.topicItemBase, defaultStyles.topicItemInactive]}>
-              <Text style={item.active ? [defaultStyles.topicItemText, styles.activityText] : defaultStyles.topicItemInactiveText}>{item.name}</Text>
+            <View style={item.active ? defaultStyles.listItemBase : [defaultStyles.listItemBase, defaultStyles.listItemInactive]}>
+              <View style={defaultStyles.listTextContainer}>
+                <Text style={item.active ? [defaultStyles.listItemText, styles.activityText] :
+                  [defaultStyles.listItemText, styles.activityText]}>{item.name}</Text>
+              </View>
               {item.active ? <Icon containerStyle={defaultStyles.progressIcon}
                 iconStyle={{color: "white"}} size={50} name="pencil" type="evilicon"/> : <View></View>}
             </View>
@@ -145,18 +133,37 @@ class MainScreen extends React.Component<Props, State> {
    * @param type type of activity
    * @param activityId id of activity
    */
-  private onActivityPress(type: string, activityId: number) {
+  private async onActivityPress(type: string, activityId: number) {
     if (type === "quiz") {
       this.props.onSelectedActivityUpdate(activityId);
-      this.props.navigation.navigate("Quiz");
+      return this.props.navigation.navigate("Quiz");
     }
     else if (type === "page") {
       this.props.onSelectedActivityUpdate(activityId);
-      this.props.navigation.navigate("TextContent");
+      return this.props.navigation.navigate("TextContent");
     }
     else if (type === "hvp") {
+      console.warn("hvp topic pressed");
       this.props.onSelectedActivityUpdate(activityId);
-      this.props.navigation.navigate("Hvp");
+      return this.props.navigation.navigate("Hvp");
+    }
+    else if (type === "assign") {
+      this.props.onSelectedActivityUpdate(activityId);
+      return this.props.navigation.navigate("Assignment");
+      /*
+      console.warn("token:", this.props.moodleToken, "activityid: ", activityId);
+      if (this.props.moodleToken && activityId) {
+        const pageService = Api.getModAssignService(HOST_URL, this.props.moodleToken);
+        const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
+        //getAssingments seems to be the only way to access assignment info... 
+        const assinging: any = await pageService.getAssignments({courseids: COURSE_IDS.split(",")});
+
+        const res = await service.coreFilesUpload({component: "assign", filearea: "draft", itemid: 0, filepath: "C:\\Users\\Antti-Metatavu\\Downloads\\20191025_102957.jpg", filename:"20191025_102957.jpg", filecontent:"image/jpeg"});
+        console.warn(res)
+        console.warn(assinging);
+        
+      }
+      */
     }
     else {
       Alert.alert("Error", strings.unsupportedActivityTypeText);

@@ -16,5 +16,10 @@
   "newsText": "Uutiset",
   "instructionsText": "Ohjeet",
   "goalsText": "Tavoitteet",
-  "chatText": "Keskustele"
+  "chatText": "Keskustele",
+  "uploadFailedError": "Tiedoston lähetys epäonnistui",
+  "fileTooLargeError": "Tiedosto koko on liian iso",
+  "errorSavingSubmission": "Palautusta tallentaessa tapahtui virhe",
+  "deadline" : "Palautus päivä",
+  "submissionSent" : "Tiedosto on lähetetty arvioitavaksi!"
 }

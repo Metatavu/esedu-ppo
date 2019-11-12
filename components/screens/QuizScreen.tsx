@@ -116,7 +116,7 @@ class QuizScreen extends React.Component<Props, State> {
             extraData={this.props.children}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) =>
-            <MultiChoiceAnswers  attemptId={this.state.attemptId != null ? this.state.attemptId : 0}
+            <MultiChoiceAnswers attemptId={this.state.attemptId != null ? this.state.attemptId : 0}
               moodleToken={this.props.moodleToken ? this.props.moodleToken : ""} exportCode={item.exportCode}
               triggerAnswerSave={(value: number, exportCode: string, token: string, attemptId: number, sequencecheck: number) =>
                 this.saveAnswer(value, exportCode, token, attemptId, sequencecheck)} question={item}/>}

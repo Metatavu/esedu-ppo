@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 import TopBar from "../layout/TopBar";
-import { View, StyleSheet, Alert, WebView, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Alert, WebView, Text, TouchableOpacity, Image } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
@@ -9,7 +9,7 @@ import Api from "moodle-ws-client"
 import { HOST_URL } from "react-native-dotenv";
 import BasicLayout from "../layout/BasicLayout";
 import defaultStyles from "../../styles/default-styles";
-import { Image, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import TextCleanup from "../../utils/TextCleanup";
 import { Conversation, Participant, Message } from "../../types/index";
 
@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
     //backgroundColor: "#53B02B",
     alignItems: "flex-start",
     flexDirection: "row",
-    textAlignVertical: "center",
+    textAlignVertical: "top",
     textAlign: "left"
   },
   messageText: {
-    textAlignVertical: "top",
+    textAlignVertical: "bottom",
     fontSize: 18,
     width: 275,
     height: 30,
@@ -158,10 +158,8 @@ class ConversationsScreen extends React.Component<Props, State> {
   public render() {
     const listFooter =
     <TouchableOpacity onPress= {() => this.onNewConversationPress()}>
-      <View style={[defaultStyles.topicItemBase]}>
-        <Icon type="MaterialIcons" size={46} name="add" color="#fff"/>
-        <View style={styles.messageContainer}>
-        </View>
+      <View style={defaultStyles.listItemBase}>
+        <Icon containerStyle={defaultStyles.taskIcon} type="MaterialIcons" size={46} name="add" color="#fff"/>
       </View>
     </TouchableOpacity>
 
@@ -173,17 +171,17 @@ class ConversationsScreen extends React.Component<Props, State> {
         data={this.state.conversations}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onConversationPress(item)}>
-          <View style={defaultStyles.topicItemBase}>
-            <Image resizeMode={"contain"} style={[defaultStyles.taskIcon]} source={{ uri: item.participants[0].avatar }}/>
-            <View style={styles.messageContainer}>
-              <Text style={[defaultStyles.topicItemText, styles.messageText]}>{item.messages[0].text}</Text>
-              <Text style={[defaultStyles.topicItemText, styles.messageUser]}>{item.participants[0].name}</Text>
+          <View style={defaultStyles.listItemBase}>
+            <Image style={defaultStyles.taskIcon} source={{ uri: item.participants[0].avatar }} resizeMode={"contain"}/>
+            <View style={defaultStyles.listTextContainer}>
+              <Text style={[defaultStyles.listItemText, styles.messageText]}>{item.messages[0].text}</Text>
+              <Text style={[defaultStyles.listItemText, styles.messageUser]}>{item.participants[0].name}</Text>
             </View>
           </View>
         </TouchableOpacity>}
         keyExtractor={(item, index) => index.toString()}
       />
-  </BasicLayout>
+      </BasicLayout>
     );
   }
 

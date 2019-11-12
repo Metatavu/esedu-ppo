@@ -8,10 +8,11 @@ import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList } from "react-navigation";
 import Api from "moodle-ws-client";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL} from "react-native-dotenv";
 import strings from "../../localization/strings";
+import * as icons from "../../static/icons/index";
 
 /**
  * Component props
@@ -95,6 +96,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
       Alert.alert("Error", strings.mainScreenErrorText);
     });
     this.setState({courseContent});
+    console.warn(courseContent);
     this.setState({loading: false});
   }
 
@@ -120,16 +122,18 @@ class CourseSectionScreen extends React.Component<Props, State> {
         data={this.state.courseContent}
         renderItem={({item}) =>
         <TouchableOpacity onPress= {() => this.onTopicPress(item)}>
-          <View style={[defaultStyles.topicItemBase,
-            item.topicDone ? styles.itemDone : (item.topicAvailable ? defaultStyles.topicItemBase : styles.topicItemInactive)]}>
-            <Icon containerStyle={defaultStyles.taskIcon} size={46} name={item.topicDone ? "trophy" : "eye"} type="evilicon" color="white"/>
-            <View style={defaultStyles.topicTaskIconBackground}/>
-            <Text style={[defaultStyles.topicItemText, item.topicDone ? defaultStyles.topicItemText : styles.itemActiveText]}>{item.topicName}</Text>
+          <View style={[defaultStyles.listItemBase,
+            item.topicDone ? styles.itemDone : (item.topicAvailable ? defaultStyles.listItemBase : styles.topicItemInactive)]}>
+            <Image style={defaultStyles.taskIcon} source={icons.MinaAsiakasIcon}/>
+            <View style={defaultStyles.listTextContainer}>
+              <Text style={[defaultStyles.listItemText, item.topicDone ? defaultStyles.listItemText : styles.itemActiveText]}>{item.topicName}</Text>
+            </View>
             <Icon containerStyle={defaultStyles.progressIcon}
               color={item.topicDone ? "#2AA255" : "#11511D"} size={50} name={item.topicDone ? "check" : "arrow-right"} type="evilicon"/>
           </View>
         </TouchableOpacity>}
         keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={ <View style={{ margin: 25 }} /> }
         />
       </BasicLayout>
     );
@@ -153,9 +157,14 @@ class CourseSectionScreen extends React.Component<Props, State> {
 
     const quizList: any = await quizService.getQuizzesByCourses({courseids: [courseId]});
 
+    const assingService = Api.getModAssignService(HOST_URL, this.props.moodleToken);
+
+    const assignmentList: any = assingService.getAssignments({courseids: [courseId]});
+
     const courseContent: CourseTopic[] = [];
 
     for (const topic of topics) {
+      console.warn(topic);
       const newCourseItem: CourseTopic = {
         id: topic.id,
         topicName: topic.name,
@@ -184,6 +193,10 @@ class CourseSectionScreen extends React.Component<Props, State> {
           newCourseItem.topicContent.push({name: activity.name, type: "hvp", activityId: activity.id, active: true});
         } else if (activity.modname === "page") {
           newCourseItem.topicContent.push({name: activity.name, type: "page", activityId: activity.id, active: true});
+        } else if (activity.modname === "assign") {
+
+          newCourseItem.topicContent.push({name: activity.name, type: "assign", activityId: activity.instance, active: true});
+          console.warn("Assingment with id: ", activity.instance);
         } else {
           newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 999, active: false});
         }

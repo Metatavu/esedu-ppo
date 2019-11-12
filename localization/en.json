@@ -16,5 +16,10 @@
   "newsText": "News",
   "instructionsText": "Instructions",
   "goalsText": "Goals",
-  "chatText": "Messages"
+  "chatText": "Messages",
+  "uploadFailedError": "Upload failed",
+  "fileTooLargeError": "File size too large",
+  "errorSavingSubmission": "Error occured while saving submission",
+  "deadline" : "Deadline",
+  "submissionSent" : "File succesfully sent for grading!"
 }

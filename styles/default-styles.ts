@@ -12,33 +12,13 @@ export default StyleSheet.create({
     fontSize: 20
   },
   listContainer: {
-    marginTop: 25,
-    marginHorizontal: 10
+    paddingTop: 25,
+    marginHorizontal: 10,
+    marginBottom: 0
   },
-  topicItemText: {
-    textAlignVertical: "center",
-    fontSize: 21,
-    width: 200,
-    height: 50,
-    paddingHorizontal: 5,
-    fontFamily: "sans-serif-condensed",
-    fontWeight: "400"
-  },
-  topicItemInactiveText: {
-    textAlignVertical: "center",
-    fontSize: 18,
-    width: 200,
-    height: 50,
-    fontFamily: "sans-serif-condensed",
-    fontWeight: "400",
-    color: "#8f8f8f"
-  },
-  topicItemInactive: {
-    borderColor: "#8f8f8f",
-    backgroundColor: "#fff"
-  },
-  topicItemBase: {
-    padding: 18,
+  listItemBase: {
+    flex: 1,
+    paddingHorizontal: 15,
     margin: 15,
     marginBottom: 0,
     marginTop: 10,
@@ -51,16 +31,24 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between"
   },
-  listTextItem: {
-    color: "#2AA255",
-    fontSize: 18
+  listItemInactive: {
+    borderColor: "#8f8f8f",
+    backgroundColor: "#fff"
   },
-  listItem: {
-    borderBottomWidth: 0,
-    color: "#2AA255"
+  listItemText: {
+    flex: 1,
+    textAlignVertical: "center",
+    fontSize: 19,
+    letterSpacing: 0,
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400"
   },
-  listItemSelected: {
-    borderBottomWidth: 0
+  listTextContainer: {
+    flex: 1,
+    alignItems: "flex-start"
+  },
+  listItemInactiveText: {
+    color: "#8f8f8f"
   },
   button: {
     backgroundColor: "#2AA255",
@@ -71,30 +59,6 @@ export default StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15
   },
-  phaseReadySwitchContainer: {
-    paddingTop: 25,
-    paddingRight: 15
-  },
-  datePickerContainer: {
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10
-  },
-  topicTaskIconBackground: {
-    margin: 10,
-    marginTop: 12,
-    position: "absolute",
-    height: 50,
-    width: 50,
-    borderRadius: 90,
-    borderTopColor: "#11511D",
-    borderTopWidth: 50,
-    borderRightWidth: 50,
-    borderRightColor: "#88B620",
-    zIndex: -1
-  },
   taskIcon: {
     height: 60,
     width: 60,
@@ -103,10 +67,6 @@ export default StyleSheet.create({
     borderRadius: 90
   },
   progressIcon: {
-    paddingTop: 5,
-    marginRight: 5,
-    height: 50,
-    width: 50,
     alignSelf: "center"
   },
   newsHeadline: {
@@ -121,5 +81,27 @@ export default StyleSheet.create({
     margin: 10,
     fontSize: 14,
     fontStyle: "italic"
+  },
+  active: {
+    color: "#fff"
+  },
+  topicHeadline: {
+    padding: 10,
+    height: 100,
+    backgroundColor: "#53B02B",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    textAlignVertical: "center",
+    textAlign: "center"
+  },
+  topicHeadlineText: {
+    textAlignVertical: "center",
+    margin: 10,
+    fontSize: 18,
+    width: 275,
+    height: 60,
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400",
+    color: "white"
   }
 });
