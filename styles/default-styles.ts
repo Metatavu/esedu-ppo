@@ -14,7 +14,8 @@ export default StyleSheet.create({
   listContainer: {
     paddingTop: 25,
     marginHorizontal: 10,
-    marginBottom: 0
+    marginBottom: 0,
+    flex: 1
   },
   listItemBase: {
     flex: 1,

@@ -27,3 +27,7 @@ export const TavoitteetIcon = require("./tavoitteet.png");
 export const TavoitteetActiveIcon = require("./tavoitteet-2.png");
 export const UutisetIcon = require("./uutiset.png");
 export const UutisetActiveIcon = require("./uutiset-2.png");
+
+//Topic Icons
+export const ContentIcon = require("./juttu.png");
+export const TaskIcon = require("./harjoitus.png");

@@ -85,16 +85,12 @@ class FooterBar extends React.Component<Props, State> {
       Icons.TavoitteetActiveIcon : Icons.TavoitteetIcon,
       screen: "TextContent",
       pageId: GOALSPAGE_ID
-    },
-    {
-      text: strings.chatText,
-      image: this.props.navigation.state.routeName === "Conversations" ? Icons.KeskusteleActiveIcon : Icons.KeskusteleIcon,
-      screen: "Conversations"
     }];
 
     const footerLayout = footerButtons.map((button, index) => {
       return(
-      <Button onPress={() => this.props.navigation.push(button.screen, {pageId: button.pageId})} vertical active={true} style={{backgroundColor: "white"}}>
+      <Button key={index} onPress={() =>
+        this.props.navigation.replace(button.screen, {pageId: button.pageId})} vertical active={true} style={{backgroundColor: "white"}}>
         <Image source={button.image} resizeMode={"contain"} style={styles.footerIcon}/>
         <Text style={styles.footerText}>{button.text}</Text>
       </Button>

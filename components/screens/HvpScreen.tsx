@@ -6,7 +6,7 @@ import { WebView, NavState, Alert, View, StyleSheet } from "react-native";
 import Api from "moodle-ws-client";
 import { HOST_URL, INFOPAGE_ID } from "react-native-dotenv";
 import strings from "../../localization/strings";
-import { HeaderProps } from "react-navigation";
+import { HeaderProps, ScrollView } from "react-navigation";
 import TopBar from "../layout/TopBar";
 import BasicLayout from "../layout/BasicLayout";
 
@@ -60,18 +60,28 @@ class HvpScreen extends React.Component<Props, State> {
     });
   };
 
-  /**
+// 
+
+  /** 
    * Component render method
    */
   public render() {
+    const script = `var css = 'body { overflow: auto !important; }',
+    head = document.head || document.getElementsByTagName('head')[0],
+    style = document.createElement('style');
+    head.appendChild(style);
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));`;
+
     return (
       <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
-        <View style={StyleSheet.absoluteFill}>
-          <WebView
-            source={{ uri: `${HOST_URL}${this.state.hvpUrl}`}}
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
+          <View style={StyleSheet.absoluteFill}>
+            <WebView
+              source={{ uri: `${HOST_URL}${this.state.hvpUrl}`}}
+              javaScriptEnabled={true}
+              injectedJavaScript={script}
+            />
+          </View>
       </BasicLayout>
     );
   }
@@ -111,13 +121,11 @@ class HvpScreen extends React.Component<Props, State> {
    * @param id hvp id @param token moodle token
    */
   private async getHvpUrl(id: number, token: string) {
-    console.warn(id, token);
     const moodleService = Api.getMoodleService(HOST_URL, token);
     const siteInfo: any = await moodleService.coreWebserviceGetSiteInfo({});
     if (!siteInfo.userid) {
       throw new Error("User not found");
     }
-    console.warn(siteInfo);
     return `/mod/hvp/embed.php?id=${id}&user_id=${siteInfo.userid}`;
   }
 }

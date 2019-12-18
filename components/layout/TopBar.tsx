@@ -75,10 +75,10 @@ class TopBar extends React.Component<Props, State> {
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption onSelect={() => this.toggleLocale()}>
-                  <Text>Language</Text>
+                <Text>{strings.language}</Text>
                 </MenuOption >
                 <MenuOption onSelect={() => this.logout()}>
-                  <Text>Logout</Text>
+                  <Text>{strings.logout}</Text>
                 </MenuOption>
                 <MenuOption />
               </MenuOptions>

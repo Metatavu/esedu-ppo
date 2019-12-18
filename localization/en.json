@@ -21,5 +21,21 @@
   "fileTooLargeError": "File size too large",
   "errorSavingSubmission": "Error occured while saving submission",
   "deadline" : "Deadline",
-  "submissionSent" : "File succesfully sent for grading!"
+  "submissionSent" : "File succesfully sent for grading!",
+  "language" : "Language",
+  "logout" : "Logout",
+  "addConversation" : "Add a conversation",
+  "title": "Title",
+  "message": "Message",
+  "send" : "Send",
+  "comment" : "Comment",
+  "conversationScreenGetError" : "Error occured while getting conversations.",
+  "selectFile" : "Select a file",
+  "messageScreenError" : "Error updating messages",
+  "newConversationScreenError" : "Error finding users",
+  "newConversationScreenConversationStartError" : "Error occured while starting a new conversation",
+  "sentForReview": "Sent for review",
+  "notSentForReview": "No submission",
+  "notGraded": "Ei arvioitu",
+  "graded": "Arvioitu"
 }

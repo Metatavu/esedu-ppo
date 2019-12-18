@@ -87,7 +87,8 @@ export interface TopicContent {
   name: string,
   type: string,
   activityId: number,
-  active: boolean
+  active: boolean,
+  isTask: boolean
 }
 
 /**
@@ -98,6 +99,18 @@ export interface NewsItem {
   text: string,
   author: string
   dateModified: Date
+};
+
+/**
+ * Forum Item Interface
+ */
+export interface ForumItem {
+  id: number,
+  title: string,
+  text: string,
+  author: string,
+  dateModified: Date,
+  comments: Message[]
 };
 
 /**

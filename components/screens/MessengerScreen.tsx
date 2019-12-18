@@ -14,6 +14,7 @@ import TextCleanup from "../../utils/TextCleanup";
 import { Conversation, Participant, Message } from "../../types";
 import { GiftedChat } from "react-native-gifted-chat";
 import { TimerMixin } from "react-timer-mixin";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -101,7 +102,9 @@ class MessengerScreen extends React.Component<Props, State> {
 
     const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
 
-    const pageInfo: any = await service.coreWebserviceGetSiteInfo({});
+    const pageInfo: any = await service.coreWebserviceGetSiteInfo({}).catch((e) => {
+      Alert.alert(strings.messageScreenError)
+    });
 
     this.setState({currentUserId: pageInfo.userid});
 
@@ -162,7 +165,10 @@ class MessengerScreen extends React.Component<Props, State> {
 
     const conversation: any = await service.coreMessageGetConversation({
       userid, conversationid, includecontactrequests: false, includeprivacyinfo: false
+    }).catch((e) => {
+      Alert.alert(strings.messageScreenError);
     });
+
     for (const message of conversation.messages) {
       let sentBy;
       for (const user of conversation.members) {
@@ -170,6 +176,7 @@ class MessengerScreen extends React.Component<Props, State> {
           sentBy = user;
         }
       }
+
       const newMessage: GiftedChatMessage = {
         createdAt: message.timecreated,
         _id: message.id,
@@ -188,7 +195,9 @@ class MessengerScreen extends React.Component<Props, State> {
 
   private async updateLoop() {
     const loop = setInterval(async () => {
-      const messages = await this.updateMessages(this.state.currentUserId, this.state.conversationId);
+      const messages = await this.updateMessages(this.state.currentUserId, this.state.conversationId).catch((e) => {
+        Alert.alert(strings.messageScreenError);
+      });
       this.setState({messages});
     }, 2000);
     this.setState({loop});
@@ -213,7 +222,7 @@ class MessengerScreen extends React.Component<Props, State> {
 
       const messageDetails = {conversationid: this.state.conversationId, messages: [{text: message[0].text, textformat: 0}]}
 
-      const sentMessageResponse = await service.coreMessageSendMessagesToConversation(messageDetails);
+      await service.coreMessageSendMessagesToConversation(messageDetails);
     }
 
     const messages = await this.updateMessages(this.state.currentUserId, this.state.conversationId);

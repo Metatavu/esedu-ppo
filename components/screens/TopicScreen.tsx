@@ -11,9 +11,6 @@ import { StyleSheet, TouchableOpacity, Alert, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import strings from "../../localization/strings";
 import * as icons from "../../static/icons/index";
-//To be removed
-import Api from "moodle-ws-client";
-import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 
 /**
  * Component props
@@ -115,7 +112,7 @@ class MainScreen extends React.Component<Props, State> {
             <View style={item.active ? defaultStyles.listItemBase : [defaultStyles.listItemBase, defaultStyles.listItemInactive]}>
               <View style={defaultStyles.listTextContainer}>
                 <Text style={item.active ? [defaultStyles.listItemText, styles.activityText] :
-                  [defaultStyles.listItemText, styles.activityText]}>{item.name}</Text>
+                  [defaultStyles.listItemText]}>{item.name}</Text>
               </View>
               {item.active ? <Icon containerStyle={defaultStyles.progressIcon}
                 iconStyle={{color: "white"}} size={50} name="pencil" type="evilicon"/> : <View></View>}
@@ -143,27 +140,16 @@ class MainScreen extends React.Component<Props, State> {
       return this.props.navigation.navigate("TextContent");
     }
     else if (type === "hvp") {
-      console.warn("hvp topic pressed");
       this.props.onSelectedActivityUpdate(activityId);
       return this.props.navigation.navigate("Hvp");
     }
     else if (type === "assign") {
       this.props.onSelectedActivityUpdate(activityId);
       return this.props.navigation.navigate("Assignment");
-      /*
-      console.warn("token:", this.props.moodleToken, "activityid: ", activityId);
-      if (this.props.moodleToken && activityId) {
-        const pageService = Api.getModAssignService(HOST_URL, this.props.moodleToken);
-        const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
-        //getAssingments seems to be the only way to access assignment info... 
-        const assinging: any = await pageService.getAssignments({courseids: COURSE_IDS.split(",")});
-
-        const res = await service.coreFilesUpload({component: "assign", filearea: "draft", itemid: 0, filepath: "C:\\Users\\Antti-Metatavu\\Downloads\\20191025_102957.jpg", filename:"20191025_102957.jpg", filecontent:"image/jpeg"});
-        console.warn(res)
-        console.warn(assinging);
-        
-      }
-      */
+    }
+    else if (type === "forum") {
+      this.props.onSelectedActivityUpdate(activityId);
+      return this.props.navigation.navigate("Forum");
     }
     else {
       Alert.alert("Error", strings.unsupportedActivityTypeText);

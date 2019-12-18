@@ -21,5 +21,19 @@
   "fileTooLargeError": "Tiedosto koko on liian iso",
   "errorSavingSubmission": "Palautusta tallentaessa tapahtui virhe",
   "deadline" : "Palautus päivä",
-  "submissionSent" : "Tiedosto on lähetetty arvioitavaksi!"
+  "submissionSent" : "Tiedosto on lähetetty arvioitavaksi!",
+  "language" : "Kieli",
+  "logout" : "Kirjaudu ulos",
+  "addConversation" : "Lisää keskustelu",
+  "title": "Otsikko",
+  "message": "Viesti",
+  "send" : "Lähetä",
+  "comment" : "Kommentoi",
+  "conversationScreenGetError" : "Keskusteluja haettaessa tapahtui virhe.",
+  "selectFile" : "Valitse tiedosto.",
+  "messageScreenError" : "Virhe viestejä päivitettäessä.",
+  "newConversationScreenError" : "Virhe käyttäjää haettaessa",
+  "newConversationScreenConversationStartError" : "Keskustelun aloittaminen epäonnistui",
+  "sentForReview": "Lähetetty arvioitavaksi",
+  "notSentForReview": "Ei palautusta"
 }
