@@ -1,14 +1,17 @@
 import React, { Dispatch } from "react";
 import TopBar from "../layout/TopBar";
-import { View, StyleSheet, Alert, WebView } from "react-native";
+import { View, StyleSheet, Alert, WebView, Text, Image } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps } from "react-navigation";
 import Api from "moodle-ws-client"
 import strings from "../../localization/strings";
-import { HOST_URL } from "react-native-dotenv";
+import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import BasicLayout from "../layout/BasicLayout";
+import defaultStyles from "../../styles/default-styles";
+import TextCleanup from "../../utils/TextCleanup";
+import * as icons from "../../static/icons";
 
 /**
  * Component props
@@ -96,18 +99,23 @@ class TextContentScreen extends React.Component<Props, State> {
 
     if (pageID != null) {
       const id = parseInt(pageID, 10);
-      const pageContent = await this.getContentPageFromMoodle(id).catch((e) => {
+      const pageContent = await this.getContentPageFromMoodle(id, COURSE_IDS.split(",")[0]).catch((e) => {
         Alert.alert("Error", strings.pageContentErrorText);
       });
-      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
+
+      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
+      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})
     } else if (this.props.pageid) {
-      const pageContent = await this.getContentPageFromMoodle(this.props.pageid).catch((e) => {
+      const pageContent = await this.getContentPageFromMoodle(this.props.pageid, this.props.courseid || COURSE_IDS.split(",")[0]).catch((e) => {
         Alert.alert("Error", strings.pageContentErrorText);
       });
-      this.setState({pageContent: `<h1>${pageContent.name}</h1> ${pageContent.content}`, loading: false});
+
+      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
+      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})
     } else {
       Alert.alert("Error", strings.pageContentErrorText);
     }
+    this.setState({loading: false});
   }
 
   /**
@@ -115,9 +123,15 @@ class TextContentScreen extends React.Component<Props, State> {
    */
   public render() {
     return (
-      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
-        <View style={{flex: 1, padding: 10, justifyContent: "center", height: "100%"}}>
-          <WebView style={{flex: 1}} originWhitelist={["*"]} source={{ html: this.state.pageContent }}/>
+      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={this.state.loading}>
+        <View style={{flex: 1}}>
+          <View style={[defaultStyles.topicHeadline, {alignItems: "center"}]}>
+            <Image source={icons.ContentIcon} style={defaultStyles.taskIcon} />
+            <Text style={defaultStyles.topicHeadlineText}>{this.state.pageHeader}</Text>
+          </View>
+          <View style={{flex: 1, padding: 10, justifyContent: "center"}}>
+            <WebView style={{zIndex: -1}} source={{ html: this.state.pageContent }}/>
+          </View>
         </View>
       </BasicLayout>
     );
@@ -139,10 +153,10 @@ class TextContentScreen extends React.Component<Props, State> {
    * 
    * @param pageid content page id to fetch
    */
-  public async getContentPageFromMoodle(pageid: number) {
-    if (this.props.moodleToken && this.props.courseid) {
+  public async getContentPageFromMoodle(pageid: number, courseid: number) {
+    if (this.props.moodleToken) {
       const pageService = Api.getModPageService(HOST_URL, this.props.moodleToken);
-      const pageList: any = await pageService.getPagesByCourses({courseids: [this.props.courseid]});
+      const pageList: any = await pageService.getPagesByCourses({courseids: [courseid]});
 
       for (const page of pageList.pages) {
         if (parseInt(page.coursemodule, 10) == pageid) {

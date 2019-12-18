@@ -5,7 +5,7 @@ import { Text, View, Input } from "native-base";
 import { StoreState, AccessToken, CourseTopic, NewsItem } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
-import { HeaderProps, FlatList } from "react-navigation";
+import { HeaderProps, FlatList, ScrollView } from "react-navigation";
 import Api from "moodle-ws-client";
 import { Alert, StyleSheet, Button, TouchableOpacity, Image } from "react-native";
 import defaultStyles from "../../styles/default-styles";
@@ -81,13 +81,22 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     textAlign: "center",
     margin: 5,
+    marginLeft: 0,
     paddingHorizontal: 15
   },
   successBadge: {
     backgroundColor: "#95C11F"
   },
   failBadge: {
-    backgroundColor: "#c1351f"
+    backgroundColor: "#00000061"
+  },
+  listItemBase: {
+    flex: 1,
+    height: 60,
+    borderBottomWidth: 1,
+    borderColor: "#10511E",
+    flexDirection: "row",
+    alignContent: "flex-start"
   }
 });
 
@@ -128,7 +137,12 @@ class NewsScreen extends React.Component<Props, State> {
     if (!this.props.activityid) {
       return this.props.navigation.navigate("Main");
     }
-    const assignment = await this.findAssignment(this.props.activityid);
+    const selectedAssignment = await this.findAssignment(this.props.activityid).catch((e) => {
+      return Alert.alert(strings.pageContentErrorText);
+    });
+    if (selectedAssignment) {
+      this.setState({selectedAssignment});
+    }
     this.setState({loading: false});
   }
 
@@ -155,34 +169,41 @@ class NewsScreen extends React.Component<Props, State> {
       )
     }
 
+    const badgeSubmissionStatus =
+      this.state.selectedAssignment.submissionStatus ? <Text style={[styles.badge, styles.successBadge]}>{strings.sentForReview}</Text>
+      : <Text style={[styles.badge, styles.failBadge]}>{strings.notSentForReview}</Text>;
+
+    const badgeReviewStatus =
+      this.state.selectedAssignment.gradingStatus ? <Text style={[styles.badge, styles.successBadge]}>{strings.graded}</Text>
+      : <Text style={[styles.badge, styles.failBadge]}>{strings.notGraded}</Text>;
+
     return (
       <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
         <View style={defaultStyles.topicHeadline}>
-        <Image style={defaultStyles.taskIcon} source={icons.MinaAsiakasIcon} resizeMode={"contain"}/>
+          <Image style={defaultStyles.taskIcon} source={icons.TaskIcon} resizeMode={"contain"}/>
           <Text style={[defaultStyles.topicHeadlineText]}>{this.state.selectedAssignment ? this.state.selectedAssignment.title : ""}</Text>
         </View>
+        <ScrollView>
         <View style={{margin: 25}}>
           <View>
             <Text>{this.state.selectedAssignment ? TextCleanup.cleanUpText(this.state.selectedAssignment.intro) : ""}</Text>
-            <Text>{this.state.selectedAssignment ? `${strings.deadline}: ${this.state.selectedAssignment.duedate.toDateString()}` : ""}</Text>
             <View style={styles.badgeContainer}>
-              {this.state.selectedAssignment ?
-              (this.state.selectedAssignment.submissionStatus ? <Text style={[styles.badge, styles.successBadge]}>Lähetetty Arvioitavaksi</Text>
-              : <Text style={[styles.badge, styles.failBadge]}>Ei palautusta</Text>)
-              : <View/>}
-              {this.state.selectedAssignment ?
-              (this.state.selectedAssignment.gradingStatus ? <Text style={[styles.badge, styles.successBadge]}>Arvioitu</Text>
-              : <Text style={[styles.badge, styles.failBadge]}>Ei arvioitu</Text>)
-              : <View/>}
+              {badgeSubmissionStatus}
+              {badgeReviewStatus}
             </View>
           </View>
-          <TouchableOpacity style={styles.addFileButton} onPress={() => this.pickFile()}>
-            <Icon size={50} name="paperclip" type="evilicon"/>
-            <View style={defaultStyles.listTextContainer}>
-              <Text style={defaultStyles.listItemText}>
-                {this.state.selectedFile ? this.state.selectedFile.fileName : (this.state.selectedAssignment.previousSubmission ?
-                  this.state.selectedAssignment.previousSubmission : "Lisää tiedosto")}
-              </Text>
+          <TouchableOpacity onPress= {() => this.pickFile()}>
+            {this.state.selectedFile && <View style={styles.listItemBase}>
+              <Icon containerStyle={[defaultStyles.progressIcon, {width: 40}]} size={30} name="archive" type="evilicon"/>
+              <View style={[defaultStyles.listTextContainer]}>
+              <Text style={defaultStyles.listItemText}>{this.state.selectedFile.fileName}</Text>
+              </View>
+            </View>}
+            <View style={styles.listItemBase}>
+              <Icon containerStyle={[defaultStyles.progressIcon, {width: 40}]} size={30} name="paperclip" type="evilicon"/>
+              <View style={[defaultStyles.listTextContainer]}>
+                <Text style={defaultStyles.listItemText}>{strings.selectFile}</Text>
+              </View>
             </View>
           </TouchableOpacity>
         </View>
@@ -190,6 +211,7 @@ class NewsScreen extends React.Component<Props, State> {
         {this.state.selectedFile ?
           <Button color={"#88B620"} title="Tallenna" onPress={() =>
             this.sendFileToAssignment()}></Button> : <View/>}
+        </ScrollView>
       </BasicLayout>
     );
   }
@@ -207,11 +229,11 @@ class NewsScreen extends React.Component<Props, State> {
       files_filemanager: this.state.selectedFile ? this.state.selectedFile.itemId : ""
     }
 
-    const saveSubmission = await service.saveSubmission({assignmentid: this.props.activityid || 0, plugindata: submissionData}).catch((e) => {
+    await service.saveSubmission({assignmentid: this.props.activityid || 0, plugindata: submissionData}).catch((e) => {
       return Alert.alert(strings.errorSavingSubmission);
     });
 
-    const submitSubmission = await service.submitForGrading({assignmentid: this.props.activityid || 0, acceptsubmissionstatement: true}).catch((e) => {
+    await service.submitForGrading({assignmentid: this.props.activityid || 0, acceptsubmissionstatement: true}).catch((e) => {
       return Alert.alert(strings.errorSavingSubmission);
     });
 
@@ -219,7 +241,7 @@ class NewsScreen extends React.Component<Props, State> {
   }
 
   /**
-   * Lets user pick a file and send it to moodle draft area via upload.php
+   * Lets user pick a file and sends it to moodle draft area via upload.php
    */
   private async pickFile() {
     const pickedFile: any = await DocumentPicker.pick({
@@ -236,26 +258,28 @@ class NewsScreen extends React.Component<Props, State> {
       return;
     }
 
-    const fileUri = pickedFile.uri;
-
     if (pickedFile.size && this.state.selectedAssignment && pickedFile.size > this.state.selectedAssignment.maxsize) {
       return Alert.alert(strings.uploadFailedError, strings.fileTooLargeError);
     }
 
+    const fileUri = pickedFile.uri;
     const data = new FormData();
     data.append("file", {uri: fileUri, type: pickedFile.type, name: pickedFile.name});
     data.append("token", this.props.moodleToken);
-    const res: any = await fetch("https://ppo-test.metatavu.io/webservice/upload.php", {
+
+    const uploadResponse: any = await fetch(HOST_URL + "/webservice/upload.php", {
       method: "POST",
       body: data
     }).catch((e) => {
       return Alert.alert(strings.uploadFailedError);
     });
-    const reponseObject = JSON.parse(res._bodyText);
+
+    const uploadInfo = JSON.parse(uploadResponse._bodyText);
     const selectedFile: SelectedFile = {
-      fileName: reponseObject[0].filename,
-      itemId: reponseObject[0].itemid
+      fileName: uploadInfo[0].filename,
+      itemId: uploadInfo[0].itemid
     }
+
     this.setState({selectedFile});
   }
 
@@ -274,7 +298,7 @@ class NewsScreen extends React.Component<Props, State> {
             title: assign.name,
             intro: assign.intro,
             duedate: new Date(assign.duedate * 1000),
-            maxsize: 1000000000,
+            maxsize: 0,
             submissionStatus: false,
             gradingStatus: assignStatus.lastattempt.graded || false,
             previousSubmission: ""
@@ -294,7 +318,7 @@ class NewsScreen extends React.Component<Props, State> {
             }
           }
 
-          this.setState({selectedAssignment})
+          return selectedAssignment;
         }
       }
     }

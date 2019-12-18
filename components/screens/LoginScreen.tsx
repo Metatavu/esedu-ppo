@@ -68,7 +68,6 @@ class LoginScreen extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    console.warn(HOST_URL);
     return (
       <WebView
         source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme=`}}
@@ -115,7 +114,6 @@ class LoginScreen extends React.Component<Props, State> {
     if (!event.url || event.url.indexOf("token=") === -1) {
       return;
     }
-       //Esedu token url "https://moodle.esedu.fi/admin/tool/mobile/://token=ZmE4MTkyMGYzNDkxYmNjNTAwODRiM2Q3MzYzMDdhNGM6OjoxNWIxZDZmMGY5NjZlMGQ5ZmZlYjNjNjkwNjkyYTI5OTo6OlhxVTFoM0ZNV0hLT09vU0xySzJtcHI1WFdHeG5GbjRxVVV3V29kMlNWcnJ5bGZzaE5veUVhbENlQXlDZHZUQ3o="
     const token = this.getTokenFromUrl(event.url);
     this.props.onMoodleTokenUpdate(token);
     this.props.navigation.replace("Main");
@@ -126,7 +124,6 @@ class LoginScreen extends React.Component<Props, State> {
    */
   private getTokenFromUrl = (url: string): string => {
     const b64 = Buffer.from(url.split("token=")[1], "base64").toString("ascii");
-    console.warn(b64);
     const token = b64.split(":::")[1];
 
     return token;

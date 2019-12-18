@@ -12,6 +12,7 @@ import defaultStyles from "../../styles/default-styles";
 import { Icon } from "react-native-elements";
 import TextCleanup from "../../utils/TextCleanup";
 import { Conversation, Participant, Message } from "../../types/index";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 25,
     fontSize: 20,
-    //backgroundColor: "#53B02B",
     alignItems: "flex-start",
     flexDirection: "row",
     textAlignVertical: "top",
@@ -57,22 +57,6 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif-condensed",
     fontWeight: "400",
     color: "white"
-  },
-  iconBackgroundAdjust: {
-    marginTop: 25
-  },
-  activityText: {
-    color: "black",
-    paddingLeft: 10
-  },
-  messageContainer: {
-    flex: 1,
-    flexDirection: "column",
-    paddingLeft: 5
-  },
-  listIcon: {
-    color: "#88B620",
-    fontSize: 32
   }
 });
 
@@ -114,41 +98,15 @@ class ConversationsScreen extends React.Component<Props, State> {
         return this.props.navigation.navigate("Login");
     }
     this.setState({loading: true});
-    const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
-    const pageInfo: any = await service.coreWebserviceGetSiteInfo({});
 
-    const conversations: any = await service.coreMessageGetConversations({userid: pageInfo.userid});
-
-    const conversationList: Conversation[] = [];
-
-    for (const conversation of conversations.conversations) {
-      const participants: Participant[] = [];
-      for (const user of conversation.members) {
-        const newUser: Participant = {
-          _id: user.id,
-          name: user.fullname,
-          avatar: user.profileimageurl
-        }
-        participants.push(newUser);
+    const conversationList = await this.getConversations().catch((e) => {
+      if (e) {
+        this.setState({loading: false});
+        return Alert.alert(strings.conversationScreenGetError);
       }
-      const messages: Message[] = [];
-      for (const message of conversation.messages) {
-        const newMessage: Message = {
-          sentTime: message.timecreated,
-          sentbyId: message.useridfrom,
-          text: TextCleanup.cleanUpText(message.text)
-        }
-        messages.push(newMessage);
-      }
+    });
 
-      const newCourseItem: Conversation = {
-        id: conversation.id,
-        participants,
-        messages
-      }
-      conversationList.push(newCourseItem);
-    }
-    this.setState({conversations: conversationList});
+    this.setState({conversations: conversationList || []});
     this.setState({loading: false});
   }
 
@@ -165,22 +123,22 @@ class ConversationsScreen extends React.Component<Props, State> {
 
     return (
       <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
-      <FlatList
-        ListFooterComponent={listFooter}
-        style={styles.listContainer}
-        data={this.state.conversations}
-        renderItem={({item}) =>
-        <TouchableOpacity onPress= {() => this.onConversationPress(item)}>
-          <View style={defaultStyles.listItemBase}>
-            <Image style={defaultStyles.taskIcon} source={{ uri: item.participants[0].avatar }} resizeMode={"contain"}/>
-            <View style={defaultStyles.listTextContainer}>
-              <Text style={[defaultStyles.listItemText, styles.messageText]}>{item.messages[0].text}</Text>
-              <Text style={[defaultStyles.listItemText, styles.messageUser]}>{item.participants[0].name}</Text>
+        <FlatList
+          ListFooterComponent={listFooter}
+          style={styles.listContainer}
+          data={this.state.conversations}
+          renderItem={({item}) =>
+          <TouchableOpacity onPress= {() => this.onConversationPress(item)}>
+            <View style={defaultStyles.listItemBase}>
+              <Image style={defaultStyles.taskIcon} source={{ uri: item.participants[0].avatar }} resizeMode={"contain"}/>
+              <View style={defaultStyles.listTextContainer}>
+                <Text style={[defaultStyles.listItemText, styles.messageText]}>{item.messages[0].text}</Text>
+                <Text style={[defaultStyles.listItemText, styles.messageUser]}>{item.participants[0].name}</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>}
-        keyExtractor={(item, index) => index.toString()}
-      />
+          </TouchableOpacity>}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </BasicLayout>
     );
   }
@@ -192,8 +150,51 @@ class ConversationsScreen extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.locale !== this.props.locale) {
-      this.props.navigation.navigate("Message");
+      this.props.navigation.navigate("Conversations");
     }
+  }
+  /**
+   * Returns the current users conversations
+   */
+  private async getConversations() {
+    const conversationList: Conversation[] = [];
+
+    const service = Api.getMoodleService(HOST_URL, this.props.moodleToken || "");
+    const pageInfo: any = await service.coreWebserviceGetSiteInfo({});
+    const conversations: any = await service.coreMessageGetConversations({userid: pageInfo.userid}).catch((e) => {
+      return conversationList;
+    });
+
+    for (const conversation of conversations.conversations) {
+      const participants: Participant[] = [];
+      for (const user of conversation.members) {
+        const newUser: Participant = {
+          _id: user.id,
+          name: user.fullname,
+          avatar: user.profileimageurl
+        }
+        participants.push(newUser);
+      }
+
+      const messages: Message[] = [];
+
+      for (const message of conversation.messages) {
+        const newMessage: Message = {
+          sentTime: message.timecreated,
+          sentbyId: message.useridfrom,
+          text: TextCleanup.cleanUpText(message.text)
+        }
+        messages.push(newMessage);
+      }
+
+      const newCourseItem: Conversation = {
+        id: conversation.id,
+        participants,
+        messages
+      }
+      conversationList.push(newCourseItem);
+    }
+    return conversationList;
   }
 
   /**

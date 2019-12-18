@@ -22,8 +22,24 @@ export interface Strings extends LocalizedStringsMethods {
   uploadFailedError: string,
   fileTooLargeError: string,
   errorSavingSubmission: string,
-  deadline: string
-  submissionSent: string
+  deadline: string,
+  submissionSent: string,
+  language: string,
+  logout: string,
+  addConversation: string,
+  title: string,
+  message: string,
+  send: string,
+  comment: string,
+  conversationScreenGetError: string,
+  selectFile: string,
+  messageScreenError: string,
+  newConversationScreenError: string,
+  newConversationScreenConversationStartError: string,
+  sentForReview: string,
+  notSentForReview: string,
+  notGraded: string,
+  graded: string,
 }
 
 const strings: Strings = new LocalizedStrings({

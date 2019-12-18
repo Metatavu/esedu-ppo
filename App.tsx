@@ -20,7 +20,9 @@ import MessengerScreen from "./components/screens/MessengerScreen";
 import ConversationsScreen from "./components/screens/ConversationsScreen";
 import NewConversationScreen from "./components/screens/NewConversationScreen";
 import AssignmentScreen from "./components/screens/AssignmentScreen";
-import DropdownAlert from "react-native-dropdownalert";
+import ForumScreen from "./components/screens/ForumScreen";
+import SplashScreen from "react-native-splash-screen";
+import { useEffect } from "react"
 
 interface State {
   authenticated: boolean
@@ -43,7 +45,8 @@ const RootStack = createStackNavigator({
   Conversations: ConversationsScreen,
   Messenger: MessengerScreen,
   NewConversation: NewConversationScreen,
-  Assignment: AssignmentScreen
+  Assignment: AssignmentScreen,
+  Forum: ForumScreen
 }, {
   defaultNavigationOptions: {
     headerStyle: {

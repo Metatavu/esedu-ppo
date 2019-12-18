@@ -15,6 +15,7 @@ import { Conversation, Participant, Message } from "../../types";
 import { GiftedChat } from "react-native-gifted-chat";
 import { TimerMixin } from "react-timer-mixin";
 import { TextInput } from "react-native-gesture-handler";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -56,7 +57,6 @@ const styles = StyleSheet.create({
     padding: 0,
     height: 25,
     fontSize: 20,
-    //backgroundColor: "#53B02B",
     alignItems: "flex-start",
     flexDirection: "row",
     textAlignVertical: "center",
@@ -117,15 +117,6 @@ class NewConversationScreen extends React.Component<Props, State> {
   };
 
   /**
-   * Component will unmount
-   */
-  public componentWillUnmount() {
-    if (this.state.loop) {
-      clearInterval(this.state.loop);
-    }
-  }
-
-  /**
    * Component did mount lifecycle method
    */
   public async componentDidMount() {
@@ -135,7 +126,9 @@ class NewConversationScreen extends React.Component<Props, State> {
 
     const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
 
-    const pageInfo: any = await service.coreWebserviceGetSiteInfo({});
+    const pageInfo: any = await service.coreWebserviceGetSiteInfo({}).catch((e) => {
+      Alert.alert(strings.newConversationScreenError);
+    });
 
     this.setState({currentUserId: pageInfo.userid});
   }
@@ -183,6 +176,7 @@ class NewConversationScreen extends React.Component<Props, State> {
   }
 
   /**
+   * Starts a new conversation with the selected user and navigates to the messenger.
    * 
    * @param item User to start a new conversation with 
    */
@@ -194,6 +188,8 @@ class NewConversationScreen extends React.Component<Props, State> {
 
     const conversation: any = await service.coreMessageGetConversationBetweenUsers({
       userid: this.state.currentUserId, otheruserid: item._id, includecontactrequests: true, includeprivacyinfo: true
+    }).catch((e) => {
+      Alert.alert(strings.newConversationScreenConversationStartError);
     });
 
     if (conversation) {
@@ -209,7 +205,10 @@ class NewConversationScreen extends React.Component<Props, State> {
     }
     const service = Api.getMoodleService(HOST_URL, this.props.moodleToken);
 
-    const searchResult: any = await service.coreMessageMessageSearchUsers({userid: this.state.currentUserId, search: txt});
+    const searchResult: any = await service.coreMessageMessageSearchUsers({userid: this.state.currentUserId, search: txt}).catch((e) => {});
+    if (searchResult === undefined) {
+      return;
+    }
 
     const allResults = searchResult.contacts.concat(searchResult.noncontacts);
 
@@ -223,6 +222,7 @@ class NewConversationScreen extends React.Component<Props, State> {
       }
       foundUsers.push(newUser);
     }
+
     this.setState({searchResults: foundUsers});
   }
 }

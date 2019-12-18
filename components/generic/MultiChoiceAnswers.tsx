@@ -83,7 +83,7 @@ class MultiChoiceAnswers extends Component<Props, State> {
             <TouchableOpacity onPress= {() =>
               this.onAnswerSelect(item.value, this.props.exportCode, this.props.moodleToken, this.props.attemptId, this.props.question.sequencecheck)}>
               <View style={[styles.AnswerBase, this.state.selectedValue === item.value ? styles.Selected : styles.Unselected]}>
-                <Text style={[defaultStyles.topicItemText, this.state.selectedValue === item.value ? styles.SelectedText : styles.UnselectedText]}>
+                <Text style={[defaultStyles.listItemText, this.state.selectedValue === item.value ? styles.SelectedText : styles.UnselectedText]}>
                   {item.name}
                 </Text>
               </View>

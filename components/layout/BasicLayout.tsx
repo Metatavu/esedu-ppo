@@ -47,8 +47,7 @@ export default class BasicLayout extends React.Component<Props, State> {
         flex: 1,
         justifyContent: "flex-end",
         marginBottom: 0,
-        position: "relative",
-        
+        position: "relative"
       },
       content: {
         marginTop: 0,
