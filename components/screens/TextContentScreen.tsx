@@ -100,22 +100,31 @@ class TextContentScreen extends React.Component<Props, State> {
     if (pageID != null) {
       const id = parseInt(pageID, 10);
       const pageContent = await this.getContentPageFromMoodle(id, COURSE_IDS.split(",")[0]).catch((e) => {
-        Alert.alert("Error", strings.pageContentErrorText);
+        this.setState({loading: false, error: true});
+        Alert.alert("Error", strings.mainScreenErrorText);
       });
-
+      if (pageContent === undefined) {
+        this.setState({error: true, loading: false});
+        return Alert.alert("Error", strings.mainScreenErrorText);
+      }
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})
     } else if (this.props.pageid) {
       const pageContent = await this.getContentPageFromMoodle(this.props.pageid, this.props.courseid || COURSE_IDS.split(",")[0]).catch((e) => {
-        Alert.alert("Error", strings.pageContentErrorText);
+        this.setState({loading: false, error: true});
+        Alert.alert("Error", strings.mainScreenErrorText);
       });
-
+      if (pageContent === undefined) {
+        this.setState({error: true, loading: false});
+        return Alert.alert("Error", strings.mainScreenErrorText);
+      }
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})
+      this.setState({loading: false});
     } else {
+      this.setState({loading: false, error: true});
       Alert.alert("Error", strings.pageContentErrorText);
     }
-    this.setState({loading: false});
   }
 
   /**
@@ -124,6 +133,7 @@ class TextContentScreen extends React.Component<Props, State> {
   public render() {
     return (
       <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={this.state.loading}>
+        {!this.state.error &&
         <View style={{flex: 1}}>
           <View style={[defaultStyles.topicHeadline, {alignItems: "center"}]}>
             <Image source={icons.ContentIcon} style={defaultStyles.taskIcon} />
@@ -133,6 +143,7 @@ class TextContentScreen extends React.Component<Props, State> {
             <WebView style={{zIndex: -1}} source={{ html: this.state.pageContent }}/>
           </View>
         </View>
+        }
       </BasicLayout>
     );
   }
