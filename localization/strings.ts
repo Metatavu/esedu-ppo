@@ -40,6 +40,7 @@ export interface Strings extends LocalizedStringsMethods {
   notSentForReview: string,
   notGraded: string,
   graded: string,
+  error: string
 }
 
 const strings: Strings = new LocalizedStrings({
