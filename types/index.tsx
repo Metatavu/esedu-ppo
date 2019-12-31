@@ -88,7 +88,9 @@ export interface TopicContent {
   type: string,
   activityId: number,
   active: boolean,
-  isTask: boolean
+  isTask: boolean,
+  courseId?: string,
+  url?: string
 }
 
 /**
