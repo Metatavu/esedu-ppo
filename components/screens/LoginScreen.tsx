@@ -33,7 +33,8 @@ interface State {
   loginDetails: LoginDetails,
   loading: boolean,
   error: boolean,
-  isLoggedin: boolean
+  isLoggedin: boolean,
+  key: number
 };
 
 /**
@@ -60,7 +61,8 @@ class LoginScreen extends React.Component<Props, State> {
       loginDetails: {},
       loading: false,
       error: false,
-      isLoggedin: false
+      isLoggedin: false,
+      key: 0
     };
   }
 
@@ -70,6 +72,7 @@ class LoginScreen extends React.Component<Props, State> {
   public render() {
     return (
       <WebView
+        key={this.state.key}
         source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme=`}}
         style={{ marginTop: 20 }}
         onNavigationStateChange={this.onNavigation}
@@ -87,6 +90,12 @@ class LoginScreen extends React.Component<Props, State> {
       this.props.navigation.navigate("Login");
     }
   }
+
+  private resetWebViewToInitialUrl = () => {
+    this.setState({
+      key: this.state.key + 1
+    });
+  };
 
   /**
    * Updates login details when values change
@@ -111,6 +120,10 @@ class LoginScreen extends React.Component<Props, State> {
    * Monitors the webview navigation, grabs the token and navigates to main page
    */
   private onNavigation = (event: NavState) => {
+    if (event.url && event.url.indexOf("/intelliboard/student/index.php") > -1) {
+      this.resetWebViewToInitialUrl();
+    }
+
     if (!event.url || event.url.indexOf("token=") === -1) {
       return;
     }
