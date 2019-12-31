@@ -108,7 +108,8 @@ class TextContentScreen extends React.Component<Props, State> {
         return Alert.alert("Error", strings.mainScreenErrorText);
       }
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
-      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})
+      this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)});
+      this.setState({loading: false});
     } else if (this.props.pageid) {
       const pageContent = await this.getContentPageFromMoodle(this.props.pageid, this.props.courseid || COURSE_IDS.split(",")[0]).catch((e) => {
         this.setState({loading: false, error: true});
