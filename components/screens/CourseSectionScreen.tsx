@@ -143,7 +143,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
     this.setState({loading: true});
     const courseContent = await this.getTopicsFromMoodle(this.props.courseid).catch((e) => {
       this.setState({loading: false, error: true});
-      Alert.alert(strings.mainScreenErrorText);
+      Alert.alert(strings.error, strings.mainScreenErrorText);
     });
     this.setState({courseContent});
     this.setState({loading: false});
@@ -166,7 +166,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
   public render() {
     return (
       <BasicLayout navigation={this.props.navigation} loading={this.state.loading} backgroundColor="#fff">
-        <ScrollView style={{flex: 1}}>
+        {!this.state.error && <ScrollView style={{flex: 1}}>
         <View>
           <View style={defaultStyles.topicHeadline}>
             <Image source={icons.PalvelutilanteetIcon} style={defaultStyles.taskIcon} />
@@ -190,7 +190,8 @@ class CourseSectionScreen extends React.Component<Props, State> {
             keyExtractor={(item, index) => index.toString()}
           />
         </ScrollView>
-      </BasicLayout>
+        }
+        </BasicLayout>
     );
   }
 
@@ -405,7 +406,9 @@ class CourseSectionScreen extends React.Component<Props, State> {
       });
       summary.courseSummaryText = summaryText;
       summary.courseSummaryImageUrl = summaryImage
-    } catch {}
+    } catch {
+      return summary
+    }
 
     return summary;
   }

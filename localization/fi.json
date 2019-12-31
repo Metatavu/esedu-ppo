@@ -9,7 +9,7 @@
   "logoutText": "Kirjaudu ulos",
   "cancelButtonText": "Peruuta",
   "quizScreenErrorText": "Kysymyksiä haettaessa tapahtui virhe",
-  "mainScreenErrorText": "Kurssin sisältöä haettaessa tapahtui virhe",
+  "mainScreenErrorText": "Kurssin sisältöä haettaessa tapahtui virhe, varmista että olet rekisteröitynyt kurssille.",
   "pageContentErrorText": "Sivun sisältöä haettaessa tapahtui virhe",
   "unsupportedActivityTypeText": "Tukematon aktiviteetti tyyppi",
   "frontPageText": "Etusivu",
@@ -35,5 +35,8 @@
   "newConversationScreenError" : "Virhe käyttäjää haettaessa",
   "newConversationScreenConversationStartError" : "Keskustelun aloittaminen epäonnistui",
   "sentForReview": "Lähetetty arvioitavaksi",
-  "notSentForReview": "Ei palautusta"
+  "notSentForReview": "Ei palautusta",
+  "notGraded": "Ei arvioitu",
+  "graded": "Arvioitu",
+  "error": "Virhe"
 }

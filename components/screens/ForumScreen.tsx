@@ -140,7 +140,7 @@ class ForumScreen extends React.Component<Props, State> {
         </View>
       </View>
 
-    const listFooter = this.state.forum.userCanPost &&
+    const listFooter =
       <View>
         <Text>{strings.addConversation}</Text>
         <View style={styles.listItemBase}>
@@ -165,7 +165,7 @@ class ForumScreen extends React.Component<Props, State> {
         <ScrollView>
           {forumHeader}
           <FlatList
-          ListFooterComponent={listFooter}
+          ListFooterComponent={this.state.forum.userCanPost ? listFooter : <View/>}
           style={[defaultStyles.listContainer]}
           data={this.state.forum.posts}
           renderItem={({item}) =>
