@@ -3,12 +3,12 @@ import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
 import { Text, View } from "native-base";
 import { Icon } from "react-native-elements";
-import { StoreState, AccessToken, CourseTopic } from "../../types";
+import { StoreState, AccessToken, CourseTopic, TopicContent } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList, ScrollView } from "react-navigation";
 import Api from "moodle-ws-client";
-import { StyleSheet, TouchableOpacity, Alert, Image, WebView } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Image, WebView, Linking } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL} from "react-native-dotenv";
 import strings from "../../localization/strings";
@@ -24,6 +24,7 @@ interface Props {
   moodleToken?: string,
   courseid?: number,
   onSelectedActivityUpdate: (activityId: number) => void
+  onSelectedSectionUpdate: (sectionId: number) => void
 };
 
 interface CourseContent {
@@ -214,7 +215,7 @@ class CourseSectionScreen extends React.Component<Props, State> {
         style={[styles.listContainer, {padding: 20}]}
         data={topic.topicContent}
         renderItem={({item}) =>
-        <TouchableOpacity onPress= {() => this.onActivityPress(item.type, item.activityId)}>
+        <TouchableOpacity onPress= {() => this.onActivityPress(item.type, item)}>
           <View style={styles.listItemBase}>
             <Image style={[defaultStyles.progressIcon, {width: 40, margin: 5}]}
               resizeMode={"contain"} source={item.isTask ? icons.TaskIcon : icons.ContentIcon }/>
@@ -235,29 +236,37 @@ class CourseSectionScreen extends React.Component<Props, State> {
    * @param type type of activity
    * @param activityId id of activity
    */
-  private async onActivityPress(type: string, activityId: number) {
+  private async onActivityPress(type: string, activity: TopicContent) {
     if (type === "quiz") {
-      this.props.onSelectedActivityUpdate(activityId);
+      this.props.onSelectedActivityUpdate(activity.activityId);
       return this.props.navigation.replace("Quiz");
     }
     else if (type === "page") {
-      this.props.onSelectedActivityUpdate(activityId);
+      this.props.onSelectedActivityUpdate(activity.activityId);
       return this.props.navigation.replace("TextContent");
     }
     else if (type === "hvp") {
-      this.props.onSelectedActivityUpdate(activityId);
+      this.props.onSelectedActivityUpdate(activity.activityId);
       return this.props.navigation.replace("Hvp");
     }
     else if (type === "assign") {
-      this.props.onSelectedActivityUpdate(activityId);
+      this.props.onSelectedActivityUpdate(activity.activityId);
       return this.props.navigation.replace("Assignment");
     }
     else if (type === "forum") {
-      this.props.onSelectedActivityUpdate(activityId);
+      this.props.onSelectedActivityUpdate(activity.activityId);
       return this.props.navigation.replace("Forum");
+    } else if(type === "url" && activity.url) {
+      Linking.openURL(activity.url)
+    } else if (type === "label") {
+      const courseId = activity.courseId ? parseInt(activity.courseId) : NaN;
+      if (!isNaN(courseId)) {
+        this.props.onSelectedSectionUpdate(courseId);
+        this.props.navigation.push("Section")
+      }
     }
     else {
-      Alert.alert("Error", strings.unsupportedActivityTypeText);
+      Alert.alert("Error", strings.unsupportedActivityTypeText + " " + type);
     }
   }
 
@@ -335,8 +344,25 @@ class CourseSectionScreen extends React.Component<Props, State> {
               newCourseItem.topicContent.push({name: activity.name, type: "forum", activityId: forum.id, active: true, isTask: true});
             }
           }
-        }
-        else {
+        } else if (activity.modname === "label") {
+          const description = activity && activity.description ? activity.description as string : "";
+          const regex = /\/course\/view\.php\?id=(\d*)/gm;
+          const match = regex.exec(description);
+          if (match && match[1]) {
+            newCourseItem.topicContent.push({name: activity.name, type: "label", activityId: 0, active: false, isTask: false, courseId: match[1]});
+          } else {
+            newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 0, active: false, isTask: false});
+          }
+        } else if (activity.modname === "url") {
+          const contents = activity.contents && activity.contents.length > 0 ? activity.contents : [];
+          const contentItem = contents.find((contentItem: any) => contentItem.type === "url");
+          if (contentItem) {
+            newCourseItem.topicContent.push({name: activity.name, type: "url", activityId: 0, active: false, isTask: false, url: contentItem.fileurl as string});
+          } else {
+            newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 0, active: false, isTask: false});
+          }
+          
+        } else {
           newCourseItem.topicContent.push({name: activity.name, type: "inactive", activityId: 0, active: false, isTask: false});
         }
       }
@@ -408,7 +434,8 @@ function mapStateToProps(state: StoreState) {
  */
 function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   return {
-    onSelectedActivityUpdate: (activityId: number) => dispatch(actions.selectedActivityUpdate(activityId))
+    onSelectedActivityUpdate: (activityId: number) => dispatch(actions.selectedActivityUpdate(activityId)),
+    onSelectedSectionUpdate: (sectionId: number) => dispatch(actions.selectedSectionUpdate(sectionId))
   };
 }
 
