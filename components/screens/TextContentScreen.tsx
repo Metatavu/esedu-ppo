@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 import TopBar from "../layout/TopBar";
-import { View, StyleSheet, Alert, WebView, Text, Image } from "react-native";
+import { View, StyleSheet, Alert, WebView, Text, Image, Modal, TouchableHighlight } from "react-native";
 import { StoreState, MultichoiceQuestion } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
@@ -102,6 +102,7 @@ class TextContentScreen extends React.Component<Props, State> {
       const pageContent = await this.getContentPageFromMoodle(id, COURSE_IDS.split(",")[0]).catch((e) => {
         this.setState({loading: false, error: true});
         Alert.alert("Error", strings.mainScreenErrorText);
+        return
       });
       if (pageContent === undefined) {
         this.setState({error: true, loading: false});
@@ -114,10 +115,12 @@ class TextContentScreen extends React.Component<Props, State> {
       const pageContent = await this.getContentPageFromMoodle(this.props.pageid, this.props.courseid || COURSE_IDS.split(",")[0]).catch((e) => {
         this.setState({loading: false, error: true});
         Alert.alert("Error", strings.mainScreenErrorText);
+        return
       });
       if (pageContent === undefined) {
         this.setState({error: true, loading: false});
-        return Alert.alert("Error", strings.mainScreenErrorText);
+        Alert.alert("Error", strings.mainScreenErrorText);
+        return
       }
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name), pageContent: pageContent.content});
       this.setState({pageHeader: TextCleanup.cleanUpText(pageContent.name)})

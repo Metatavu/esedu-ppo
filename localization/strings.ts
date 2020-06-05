@@ -44,8 +44,8 @@ export interface Strings extends LocalizedStringsMethods {
 }
 
 const strings: Strings = new LocalizedStrings({
-  en: require("./en.json"),
-  fi: require("./fi.json")
+  fi: require("./fi.json"),
+  en: require("./en.json")
 });
 
 export default strings;

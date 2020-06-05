@@ -150,7 +150,7 @@ class ForumScreen extends React.Component<Props, State> {
         </View>
         <View style={styles.listItemBase}>
           <View style={[defaultStyles.listTextContainer]}>
-            <TextInput placeholder={strings.message} onChangeText={(text) => this.onChangeText(text, true)} style={styles.textField}/>
+            <TextInput placeholder={strings.message} onChangeText={(text) => this.onChangeText(text, false)} style={styles.textField}/>
           </View>
         </View>
         <View style={styles.listItemBase}>

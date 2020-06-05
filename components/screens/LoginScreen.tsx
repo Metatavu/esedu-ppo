@@ -120,7 +120,7 @@ class LoginScreen extends React.Component<Props, State> {
    * Monitors the webview navigation, grabs the token and navigates to main page
    */
   private onNavigation = (event: NavState) => {
-    if (event.url && event.url.indexOf("/intelliboard/student/index.php") > -1) {
+    if (event.url && (event.url.indexOf("user/profile.php") > -1 || event.url.indexOf("/intelliboard/student/index.php") > -1)) {
       this.resetWebViewToInitialUrl();
     }
 

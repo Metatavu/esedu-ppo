@@ -56,7 +56,8 @@ class HvpScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showCancel={false} showBack={true} navigation={props.navigation} showMenu={true}
+        showHeader={false} showLogout={true} showUser={true} />
     });
   };
 

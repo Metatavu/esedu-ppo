@@ -94,7 +94,14 @@ const styles = StyleSheet.create({
     fontFamily: "sans-serif-condensed",
     fontWeight: "700",
     color: "#fff",
-    textAlignVertical: "center"}
+    textAlignVertical: "center"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  }
 });
 
 /**
@@ -143,7 +150,9 @@ class CourseSectionScreen extends React.Component<Props, State> {
     this.setState({loading: true});
     const courseContent = await this.getTopicsFromMoodle(this.props.courseid).catch((e) => {
       this.setState({loading: false, error: true});
-      Alert.alert(strings.error, strings.mainScreenErrorText);
+      //Alert.alert(strings.error, strings.mainScreenErrorText);
+      this.props.navigation.navigate("Register")
+
     });
     this.setState({courseContent});
     this.setState({loading: false});
@@ -239,23 +248,23 @@ class CourseSectionScreen extends React.Component<Props, State> {
   private async onActivityPress(type: string, activity: TopicContent) {
     if (type === "quiz") {
       this.props.onSelectedActivityUpdate(activity.activityId);
-      return this.props.navigation.replace("Quiz");
+      return this.props.navigation.push("Quiz");
     }
     else if (type === "page") {
       this.props.onSelectedActivityUpdate(activity.activityId);
-      return this.props.navigation.replace("TextContent");
+      return this.props.navigation.push("TextContent");
     }
     else if (type === "hvp") {
       this.props.onSelectedActivityUpdate(activity.activityId);
-      return this.props.navigation.replace("Hvp");
+      return this.props.navigation.push("Hvp");
     }
     else if (type === "assign") {
       this.props.onSelectedActivityUpdate(activity.activityId);
-      return this.props.navigation.replace("Assignment");
+      return this.props.navigation.push("Assignment");
     }
     else if (type === "forum") {
       this.props.onSelectedActivityUpdate(activity.activityId);
-      return this.props.navigation.replace("Forum");
+      return this.props.navigation.push("Forum");
     } else if(type === "url" && activity.url) {
       Linking.openURL(activity.url)
     } else if (type === "label") {

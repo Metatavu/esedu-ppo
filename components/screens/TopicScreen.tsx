@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 /**
  * Component for application main screen
  */
-class MainScreen extends React.Component<Props, State> {
+class TopicScreen extends React.Component<Props, State> {
 
   /**
    * Constructor
@@ -71,7 +71,7 @@ class MainScreen extends React.Component<Props, State> {
   public static navigationOptions = (props: HeaderProps) => {
     return ({
       headerLeft: null,
-      headerTitle: <TopBar showBack={true} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
+      headerTitle: <TopBar showBack={false} navigation={props.navigation} showMenu={true} showHeader={false} showLogout={true} showUser={true} />
     });
   };
 
@@ -133,23 +133,23 @@ class MainScreen extends React.Component<Props, State> {
   private async onActivityPress(type: string, activityId: number) {
     if (type === "quiz") {
       this.props.onSelectedActivityUpdate(activityId);
-      return this.props.navigation.navigate("Quiz");
+      return this.props.navigation.push("Quiz");
     }
     else if (type === "page") {
       this.props.onSelectedActivityUpdate(activityId);
-      return this.props.navigation.navigate("TextContent");
+      return this.props.navigation.push("TextContent");
     }
     else if (type === "hvp") {
       this.props.onSelectedActivityUpdate(activityId);
-      return this.props.navigation.navigate("Hvp");
+      return this.props.navigation.push("Hvp");
     }
     else if (type === "assign") {
       this.props.onSelectedActivityUpdate(activityId);
-      return this.props.navigation.navigate("Assignment");
+      return this.props.navigation.push("Assignment");
     }
     else if (type === "forum") {
       this.props.onSelectedActivityUpdate(activityId);
-      return this.props.navigation.navigate("Forum");
+      return this.props.navigation.push("Forum");
     }
     else {
       Alert.alert("Error", strings.unsupportedActivityTypeText);
@@ -181,4 +181,4 @@ function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(TopicScreen);

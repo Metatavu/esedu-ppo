@@ -21,6 +21,7 @@ import ConversationsScreen from "./components/screens/ConversationsScreen";
 import NewConversationScreen from "./components/screens/NewConversationScreen";
 import AssignmentScreen from "./components/screens/AssignmentScreen";
 import ForumScreen from "./components/screens/ForumScreen";
+import RegisterScreen from "./components/screens/RegisterScreen"
 import SplashScreen from "react-native-splash-screen";
 import { useEffect } from "react"
 
@@ -34,19 +35,22 @@ const initalStoreState: StoreState = {
 const store = createStore<StoreState, AppAction, any, any>(reducer as any, initalStoreState);
 
 const RootStack = createStackNavigator({
-  Main: MainScreen,
-  Login: LoginScreen,
-  Quiz: QuizScreen,
-  Topic: TopicScreen,
-  TextContent: TextContentScreen,
-  News: NewsScreen,
-  Hvp: HvpScreen,
-  Section: CourseSectionScreen,
-  Conversations: ConversationsScreen,
-  Messenger: MessengerScreen,
-  NewConversation: NewConversationScreen,
-  Assignment: AssignmentScreen,
-  Forum: ForumScreen
+  Main: {
+    screen: MainScreen
+  },
+  Login: { screen: LoginScreen },
+  Quiz: { screen: QuizScreen},
+  Topic: { screen: TopicScreen},
+  TextContent: { screen: TextContentScreen},
+  News: { screen: NewsScreen},
+  Hvp: { screen: HvpScreen},
+  Section: { screen: CourseSectionScreen},
+  Conversations: { screen: ConversationsScreen},
+  Messenger: { screen: MessengerScreen},
+  NewConversation: { screen: NewConversationScreen},
+  Assignment: { screen: AssignmentScreen},
+  Forum: { screen: ForumScreen},
+  Register: { screen: RegisterScreen }
 }, {
   defaultNavigationOptions: {
     headerStyle: {

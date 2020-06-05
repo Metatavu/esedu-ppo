@@ -150,6 +150,13 @@ class MessengerScreen extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * Updates messages from moodle API
+   * 
+   * @param userid current user
+   * @param conversationid conversation id
+   * @param userToMessageId user to send messages to
+   */
   private async updateMessages(userid?: number, conversationid?: number, userToMessageId?: number) {
     if (!this.props.moodleToken || !userid) {
       return this.props.navigation.naviage("Login");
@@ -192,7 +199,10 @@ class MessengerScreen extends React.Component<Props, State> {
 
     return messages;
   }
-
+  
+  /**
+   * Update loop for message polling.
+   */
   private async updateLoop() {
     const loop = setInterval(async () => {
       const messages = await this.updateMessages(this.state.currentUserId, this.state.conversationId).catch((e) => {

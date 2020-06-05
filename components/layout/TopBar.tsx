@@ -85,7 +85,7 @@ class TopBar extends React.Component<Props, State> {
             </Menu>
             }
             {this.props.showBack &&
-            <TouchableOpacity style={{padding: 20}} onPress={() => this.props.navigation.goBack()}>
+            <TouchableOpacity style={{padding: 20}} onPress={() => this.props.navigation.goBack(null)}>
               <Icon name="arrow-back" type="MaterialIcons"/>
             </TouchableOpacity>
             }
