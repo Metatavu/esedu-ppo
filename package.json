@@ -42,7 +42,7 @@
     "@types/react-redux": "^6.0.0",
     "@types/urijs": "^1.15.38",
     "babel-jest": "23.6.0",
-    "jest": "23.6.0",
+    "jest": "29.6.3",
     "metro-react-native-babel-preset": "0.51.1",
     "react-native-dotenv": "^0.2.0",
     "react-native-typescript-transformer": "^1.2.11",
