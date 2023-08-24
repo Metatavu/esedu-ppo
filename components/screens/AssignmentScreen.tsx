@@ -1,13 +1,13 @@
 import React, { Dispatch } from "react";
 import BasicLayout from "../layout/BasicLayout";
 import TopBar from "../layout/TopBar";
-import { Text, View, Input } from "native-base";
+import { Text, View, Input, Textarea } from "native-base";
 import { StoreState, AccessToken, CourseTopic, NewsItem } from "../../types";
 import * as actions from "../../actions";
 import { connect } from "react-redux";
 import { HeaderProps, FlatList, ScrollView } from "react-navigation";
 import Api from "moodle-ws-client";
-import { Alert, StyleSheet, Button, TouchableOpacity, Image } from "react-native";
+import { Alert, StyleSheet, Button, TouchableOpacity, Image, TextInput } from "react-native";
 import defaultStyles from "../../styles/default-styles";
 import { HOST_URL, COURSE_IDS } from "react-native-dotenv";
 import strings from "../../localization/strings";
@@ -32,6 +32,7 @@ interface Props {
  * Component state
  */
 interface State {
+  text?: string
   moodleToken?: string,
   loading: boolean,
   error: boolean,
@@ -103,8 +104,8 @@ const styles = StyleSheet.create({
 /**
  * Component for application main screen
  */
-class NewsScreen extends React.Component<Props, State> {
-
+class AssignmentScreen extends React.Component<Props, State> {
+  
   /**
    * Constructor
    * 
@@ -157,6 +158,7 @@ class NewsScreen extends React.Component<Props, State> {
     }
   }
 
+  
   /**
    * Component render
    */
@@ -206,9 +208,16 @@ class NewsScreen extends React.Component<Props, State> {
               </View>
             </View>
           </TouchableOpacity>
+          
+          <TextInput 
+            multiline={true}
+            numberOfLines={10}
+            onChangeText={(text: string) => this.setState({text})}
+            value={this.state.text}
+            style={{ height:200, textAlignVertical: 'top'}}/>
         </View>
 
-        {this.state.selectedFile ?
+        {this.state.selectedFile || this.state.text ?
           <Button color={"#88B620"} title="Tallenna" onPress={() =>
             this.sendFileToAssignment()}></Button> : <View/>}
         </ScrollView>
@@ -225,8 +234,16 @@ class NewsScreen extends React.Component<Props, State> {
     }
     const service = Api.getModAssignService(HOST_URL, this.props.moodleToken);
 
-    const submissionData = {
-      files_filemanager: this.state.selectedFile ? this.state.selectedFile.itemId : ""
+    var submissionData: any;
+    if (this.state.selectedFile) {
+      submissionData.files_filemanager = this.state.selectedFile.itemId;
+    }
+    if (this.state.text?.length && this.state.text?.length > 0) {
+      submissionData.onlinetext_editor = {
+        text: "<p>" + this.state.text + "</p>",
+        format: 1,
+        itemid: 0,
+      }
     }
 
     await service.saveSubmission({assignmentid: this.props.activityid || 0, plugindata: submissionData}).catch((e) => {
@@ -288,39 +305,50 @@ class NewsScreen extends React.Component<Props, State> {
    * @param activityId activity id to find the assignment with
    */
   private async findAssignment(activityId: number) {
-    const moodleService = Api.getModAssignService(HOST_URL, this.props.moodleToken || "")
-    const assignList: any = await moodleService.getAssignments({courseids: this.props.courseid ? [this.props.courseid] : undefined});
-    for (const courses of assignList.courses) {
-      for (const assign of courses.assignments) {
-        if (assign.id === activityId) {
-          const assignStatus: any = await moodleService.getSubmissionStatus({assignid: assign.id});
-          const selectedAssignment: SelectedAssignment = {
-            title: assign.name,
-            intro: assign.intro,
-            duedate: new Date(assign.duedate * 1000),
-            maxsize: 0,
-            submissionStatus: false,
-            gradingStatus: assignStatus.lastattempt.graded || false,
-            previousSubmission: ""
-          }
-          if (assignStatus.lastattempt.submission.status === "submitted") {
-            selectedAssignment.submissionStatus = true;
-          }
-          for (const conf of assign.configs) {
-            if (conf.name === "maxsubmissionsizebytes") {
-              selectedAssignment.maxsize = conf.value;
-              break;
+    try {
+      const moodleService = Api.getModAssignService(HOST_URL, this.props.moodleToken || "")
+      const assignList: any = await moodleService.getAssignments({courseids: this.props.courseid ? [this.props.courseid] : undefined});
+      for (const courses of assignList.courses) {
+        for (const assign of courses.assignments) {
+          if (assign.id === activityId) {
+            const assignStatus: any = await moodleService.getSubmissionStatus({assignid: assign.id});
+            const selectedAssignment: SelectedAssignment = {
+              title: assign.name,
+              intro: assign.intro,
+              duedate: new Date(assign.duedate * 1000),
+              maxsize: 0,
+              submissionStatus: false,
+              gradingStatus: assignStatus.lastattempt.graded || false,
+              previousSubmission: ""
             }
-          }
-          for (const plugin of assignStatus.lastattempt.submission.plugins) {
-            if (plugin.name === "File submissions" && plugin.fileareas[0].files.length > 0) {
-              selectedAssignment.previousSubmission = plugin.fileareas[0].files[0].filename;
-            }
-          }
 
-          return selectedAssignment;
+            for (const conf of assign.configs) {
+              if (conf.name === "maxsubmissionsizebytes") {
+                selectedAssignment.maxsize = conf.value;
+                break;
+              }
+            }
+
+            if (assignStatus.lastattempt.submission != null) {
+              if (assignStatus.lastattempt.submission.status === "submitted") {
+                selectedAssignment.submissionStatus = true;
+              }
+
+              for (const plugin of assignStatus.lastattempt.submission.plugins) {
+                if (plugin.name === "File submissions" && plugin.fileareas[0].files.length > 0) {
+                  selectedAssignment.previousSubmission = plugin.fileareas[0].files[0].filename;
+                }
+              }
+              
+            }
+
+
+            return selectedAssignment;
+          }
         }
       }
+    } catch(e) {
+
     }
   }
 }
@@ -349,4 +377,4 @@ function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AssignmentScreen);

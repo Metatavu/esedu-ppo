@@ -75,7 +75,7 @@ class HvpScreen extends React.Component<Props, State> {
     style.appendChild(document.createTextNode(css));`;
 
     return (
-      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={false}>
+      <BasicLayout navigation={this.props.navigation} backgroundColor="#fff" loading={this.state.loading}>
           <View style={StyleSheet.absoluteFill}>
             <WebView
               source={{ uri: `${HOST_URL}${this.state.hvpUrl}`}}
@@ -100,7 +100,7 @@ class HvpScreen extends React.Component<Props, State> {
       Alert.alert("Error", strings.pageContentErrorText);
     });
     if (hvpUrl) {
-      this.setState({hvpUrl})
+      this.setState({hvpUrl});
       this.setState({loading: false});
     }
   }

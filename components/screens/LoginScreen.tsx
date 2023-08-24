@@ -73,7 +73,7 @@ class LoginScreen extends React.Component<Props, State> {
     return (
       <WebView
         key={this.state.key}
-        source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000&urlscheme=`}}
+        source={{ uri: `${HOST_URL}/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=5000`}}
         style={{ marginTop: 20 }}
         onNavigationStateChange={this.onNavigation}
       />

@@ -2,10 +2,10 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "27.0.3"
+        buildToolsVersion = "33.0.2"
         minSdkVersion = 16
-        compileSdkVersion = 27
-        targetSdkVersion = 26
+        compileSdkVersion = 33
+        targetSdkVersion = 33
         supportLibVersion = "27.1.1"
     }
     repositories {
@@ -19,8 +19,14 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
 
 allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
+        }
+    }
     repositories {
         mavenLocal()
         google()

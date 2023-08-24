@@ -29,7 +29,7 @@ interface State {
   authenticated: boolean
 }
 const initalStoreState: StoreState = {
-  locale: strings.getLanguage()
+  locale: strings.getLanguage() || "fi"
 };
 
 const store = createStore<StoreState, AppAction, any, any>(reducer as any, initalStoreState);
