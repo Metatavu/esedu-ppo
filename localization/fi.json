@@ -1,0 +1,12 @@
+{
+  "loginScreenHeader": "Kirjaudu sisään",
+  "loginScreenUsernameLabel": "Käyttäjätunnus",
+  "loginScreenPasswordLabel": "Salasana",
+  "loginScreenLoginButton": "Kirjaudu",
+  "loginScreenErrorDialogTitle": "Virhe",
+  "loginScreenUnknownError": "Kirjatumisessa tapahtui odottamaton virhe",
+  "loginScreenWrongInfo" : "Kirjautumistiedot eivät ole oikein",
+  "logoutText": "Kirjaudu ulos",
+  "cancelButtonText": "Peruuta",
+  "quizScreenErrorText": "Kysymyksiä haettaessa tapahtui virhe"
+}
