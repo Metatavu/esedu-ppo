@@ -7,10 +7,12 @@ import { AccessToken, CourseTopic } from "../types";
  * Interface describing common state in Redux
  */
 export interface CommonState {
-  accessToken?: AccessToken,
-  moodleToken?: string,
-  selectedTopic?: CourseTopic,
-  locale: string
+  accessToken?: AccessToken;
+  moodleToken?: string;
+  selectedTopic?: CourseTopic;
+  locale: string;
+  selectedActivityId?: number;
+  selectedSectionId?: number;
 }
 
 /**
@@ -20,7 +22,9 @@ const initialState: CommonState = {
   accessToken: undefined,
   moodleToken: undefined,
   selectedTopic: undefined,
-  locale: "fi"
+  locale: "fi",
+  selectedActivityId: undefined,
+  selectedSectionId: undefined
 };
 
 /**
@@ -41,6 +45,12 @@ export const commonSlice = createSlice({
     },
     selectedTopicUpdate: (state, { payload: selectedTopic }: PayloadAction<CourseTopic | undefined>) => {
       state.selectedTopic = selectedTopic;
+    },
+    selectedActivityIdUpdate: (state, { payload: selectedActivityId }: PayloadAction<number | undefined>) => {
+      state.selectedActivityId = selectedActivityId;
+    },
+    selectedSectionIdUpdate: (state, { payload: selectedSectionId }: PayloadAction<number | undefined>) => {
+      state.selectedSectionId = selectedSectionId;
     }
   }
 });
@@ -48,12 +58,14 @@ export const commonSlice = createSlice({
 /**
  * Common actions from created slice
  */
-export const { accessTokenUpdate, moodleTokenUpdate, localeUpdate, selectedTopicUpdate } = commonSlice.actions;
+export const { accessTokenUpdate, moodleTokenUpdate, localeUpdate, selectedTopicUpdate, selectedActivityIdUpdate, selectedSectionIdUpdate } = commonSlice.actions;
 
 export const selectAccessToken = (state: RootState) => state.common.accessToken;
 export const selectMoodleToken = (state: RootState) => state.common.moodleToken;
 export const selectSelectedTopic = (state: RootState) => state.common.selectedTopic;
 export const selectLocale = (state: RootState) => state.common.locale;
+export const selectSelectedActivityId = (state: RootState) => state.common.selectedActivityId;
+export const selectSelectedSectionId = (state: RootState) => state.common.selectedSectionId;
 
 /**
  * Reducer for common slice

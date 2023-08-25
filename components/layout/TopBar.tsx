@@ -1,10 +1,12 @@
 import React from "react";
-import { Text, View, TouchableHighlight } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import strings from "../../localization/strings";
 import { NavigationActions, StackActions } from "react-navigation";
 import { NavigationStackProp } from "react-navigation-stack";
 import { accessTokenUpdate, localeUpdate, selectAccessToken, selectLocale } from "../../features/common-slice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Icon } from "native-base";
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 
 /**
  * Component props
@@ -12,10 +14,9 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 interface Props {
   showLogout?: boolean;
   header?: string;
-  showMenu?: boolean;
-  showUser?: boolean;
   showHeader?: boolean;
   showCancel?: boolean;
+  showBack: boolean;
   textColor?: string;
   navigation: NavigationStackProp;
 }
@@ -23,7 +24,7 @@ interface Props {
 /**
  * Top bar component
  */
-const TopBar = ({ showLogout, header, showMenu, showUser, showHeader, showCancel, textColor, navigation }: Props) => {
+const TopBar = ({ showLogout, header, showHeader, showCancel, textColor, navigation, showBack }: Props) => {
   const dispatch = useAppDispatch();
   const locale = useAppSelector(selectLocale);
   const accessToken = useAppSelector(selectAccessToken);
@@ -57,40 +58,40 @@ const TopBar = ({ showLogout, header, showMenu, showUser, showHeader, showCancel
   }
 
   return (
-    <View style={{flex: 1}}>
-      <View style={{height: 50}}>
-        <View style={{flex: 1, flexDirection: "row", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between"}}>
-
-          {showMenu &&
-            <TouchableHighlight onPress={toggleLocale} style={{paddingLeft: 10}}>
-              <Text style={{color: textColor || "#000"}}>{locale === "fi" ? "In english" : "Suomeksi"}</Text>
-            </TouchableHighlight>
-          }
-
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, flexDirection: "row-reverse", paddingLeft: 10, paddingRight: 10, alignItems: "center", justifyContent: "space-between" }}>
           {showHeader &&
             <Text style={header &&
-               header.length > 20 ?
-               { fontSize: 18, color: textColor || "#000"} : { fontSize: 25, color: textColor || "#fff"}}>{header}</Text>
+              header.length > 20 ?
+              { fontSize: 18, color: textColor || "#000" } : { fontSize: 25, color: textColor || "#fff" }}>{header}</Text>
           }
-
-          {showUser &&
-            <TouchableHighlight style={{paddingRight: 10}}>
-              <Text style={{color: textColor || "#000"}}>
-                {accessToken ? accessToken.firstName + " " + accessToken.lastName : ""}
-              </Text>
-            </TouchableHighlight>
-          }
-
           {showCancel &&
-            <Text onPress={() => navigation.reset([NavigationActions.navigate({routeName: "Main"})], 0)} style={{color: textColor || "#fff"}}>
+            <Text onPress={() => navigation
+              .reset([NavigationActions.navigate({ routeName: "Main" })], 0)} style={{ color: textColor || "#fff" }}>
               {strings.cancelButtonText}
             </Text>
           }
-
           {showLogout &&
-            <Text onPress={() => logout()} style={{color: textColor || "#fff"}}>
-              {strings.logoutText}
-            </Text>
+            <Menu>
+              <MenuTrigger>
+                <Icon size={40} style={{ padding: 20 }} color="#10511E" name="menu"></Icon>
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption onSelect={() => toggleLocale()}>
+                  <Text>{strings.language}</Text>
+                </MenuOption >
+                <MenuOption onSelect={() => logout()}>
+                  <Text>{strings.logout}</Text>
+                </MenuOption>
+                <MenuOption />
+              </MenuOptions>
+            </Menu>
+          }
+          {showBack &&
+            <TouchableOpacity style={{ padding: 20 }} onPress={() => navigation.goBack(null)}>
+              <Icon name="arrow-back" />
+            </TouchableOpacity>
           }
         </View>
       </View>

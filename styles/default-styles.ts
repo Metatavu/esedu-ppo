@@ -2,34 +2,28 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   screenHeader: {
-    backgroundColor: "#2AA255",
-    color: "#FFF",
+    backgroundColor: "#53B02B",
+    color: "white",
     width: "100%",
-    paddingTop: 15,
-    paddingBottom: 15,
+    padding: 15,
     textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 24,
-    marginTop: 15
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400",
+    fontSize: 20
   },
   listContainer: {
-    marginTop: 25,
-    marginHorizontal: 10
+    paddingTop: 25,
+    marginHorizontal: 10,
+    marginBottom: 0,
+    flex: 1
   },
-  topicItemText: {
-    textAlignVertical: "center",
-    fontSize: 18,
-    width: 200,
-    height: 50,
-    fontFamily: "sans-serif-condensed",
-    fontWeight: "400"
-  },
-  topicItemBase: {
-    padding: 10,
+  listItemBase: {
+    flex: 1,
+    paddingHorizontal: 15,
     margin: 15,
     marginBottom: 0,
     marginTop: 10,
-    height: 75,
+    height: 95,
     borderWidth: 1,
     borderColor: "#53B02B",
     backgroundColor: "#53B02B",
@@ -38,16 +32,24 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between"
   },
-  listTextItem: {
-    color: "#2AA255",
-    fontSize: 18
+  listItemInactive: {
+    borderColor: "#8f8f8f",
+    backgroundColor: "#fff"
   },
-  listItem: {
-    borderBottomWidth: 0,
-    color: "#2AA255"
+  listItemText: {
+    flex: 1,
+    textAlignVertical: "center",
+    fontSize: 19,
+    letterSpacing: 0,
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400"
   },
-  listItemSelected: {
-    borderBottomWidth: 0
+  listTextContainer: {
+    flex: 1,
+    alignItems: "flex-start"
+  },
+  listItemInactiveText: {
+    color: "#8f8f8f"
   },
   button: {
     backgroundColor: "#2AA255",
@@ -58,41 +60,49 @@ export default StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15
   },
-  phaseReadySwitchContainer: {
-    paddingTop: 25,
-    paddingRight: 15
-  },
-  datePickerContainer: {
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10
-  },
-  topicTaskIconBackground: {
-    margin: 10,
-    marginTop: 12,
-    position: "absolute",
-    height: 50,
-    width: 50,
-    borderRadius: 90,
-    borderTopColor: "#11511D",
-    borderTopWidth: 50,
-    borderRightWidth: 50,
-    borderRightColor: "#88B620",
-    zIndex: -1
-  },
   taskIcon: {
-    paddingTop: 7,
-    height: 50,
-    width: 50,
-    borderRadius: 90,
-    alignSelf: "center"
+    height: 60,
+    width: 60,
+    alignSelf: "center",
+    marginRight: 12,
+    borderRadius: 90
   },
   progressIcon: {
-    paddingTop: 5,
-    height: 50,
-    width: 50,
     alignSelf: "center"
+  },
+  newsHeadline: {
+    margin: 10,
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  newsText: {
+    margin: 10
+  },
+  newsFooterText: {
+    margin: 10,
+    fontSize: 14,
+    fontStyle: "italic"
+  },
+  active: {
+    color: "#fff"
+  },
+  topicHeadline: {
+    padding: 10,
+    height: 100,
+    backgroundColor: "#53B02B",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    textAlignVertical: "center",
+    textAlign: "center"
+  },
+  topicHeadlineText: {
+    textAlignVertical: "center",
+    margin: 10,
+    fontSize: 18,
+    width: 275,
+    height: 60,
+    fontFamily: "sans-serif-condensed",
+    fontWeight: "400",
+    color: "white"
   }
 });

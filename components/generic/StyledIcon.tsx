@@ -8,17 +8,19 @@ interface Props {
     size: number;
     name: string;
     style: StyleProp<ViewStyle>
+    color?: string;
 };
 
 /**
  * Styled icon component
  */
-const StyledIcon = ({ size, name, style }: Props) => {
+const StyledIcon = ({ size, name, style, color }: Props) => {
     return (
         <Box style={style}>
             <Icon
                 size={size}
                 name={name}
+                color={ color }
             />
         </Box>
     );

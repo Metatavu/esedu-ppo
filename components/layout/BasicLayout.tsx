@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, HStack, Spinner, VStack } from "native-base";
 import { StyleSheet, View, ImageBackground } from "react-native";
+import FooterBar from "./FooterBar";
+import { NavigationStackProp } from "react-navigation-stack";
 
 /**
  * Component props
@@ -10,7 +12,8 @@ interface Props {
   backgroundImage?: any
   footerContent?: JSX.Element
   loading?: boolean
-  children?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[] | null;
+  navigation: NavigationStackProp;
 }
 
 /**
@@ -49,34 +52,45 @@ export default class BasicLayout extends React.Component<Props, State> {
 
     const styles = StyleSheet.create({
       container: {
-        backgroundColor: this.props.backgroundColor
+        backgroundColor: this.props.backgroundColor,
+        flex: 1
+      },
+      bottom: {
+        flex: 1,
+        justifyContent: "flex-end",
+        marginBottom: 0,
+        position: "relative"
+      },
+      content: {
+        marginTop: 0,
+        marginBottom: 70
       }
     });
 
     const content = this.props.backgroundImage ? (
       <Box style={styles.container}>
-        <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%"}}>
+        <ImageBackground source={this.props.backgroundImage} style={{width: "100%", height: "100%", flex: 1}}>
           <VStack flex={1}>
             {this.props.children}
           </VStack>
           <HStack>
-            {this.props.footerContent ? this.props.footerContent : null}
-        </HStack>
+            <FooterBar navigation={this.props.navigation} />
+          </HStack>
         </ImageBackground>
       </Box>
     ) : (
       <Box style={styles.container}>
-        <VStack flex={1}>
-            {this.props.children}
-        </VStack>
-        <HStack>
-            {this.props.footerContent ? this.props.footerContent : null}
-        </HStack>
+        <View style={[StyleSheet.absoluteFill, styles.content]}>
+          {this.props.children}
+        </View>
+        <View style={styles.bottom}>
+          <FooterBar navigation={this.props.navigation}/>
+        </View>
       </Box>
     );
 
     return (
-      <View style={{width: "100%", height: "100%"}}>
+      <View style={{flex: 1, width: "100%", height: "100%"}}>
         {content}
       </View>
     );

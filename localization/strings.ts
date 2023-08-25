@@ -10,13 +10,42 @@ export interface Strings extends LocalizedStringsMethods {
   loginScreenWrongInfo: string,
   logoutText: string,
   cancelButtonText: string,
-  quizScreenErrorText: string
+  quizScreenErrorText: string,
+  mainScreenErrorText: string,
+  pageContentErrorText: string,
+  unsupportedActivityTypeText: string,
+  frontPageText: string,
+  newsText: string,
+  instructionsText: string,
+  goalsText: string,
+  chatText: string,
+  uploadFailedError: string,
+  fileTooLargeError: string,
+  errorSavingSubmission: string,
+  deadline: string,
+  submissionSent: string,
+  language: string,
+  logout: string,
+  addConversation: string,
+  title: string,
+  message: string,
+  send: string,
+  comment: string,
+  conversationScreenGetError: string,
+  selectFile: string,
+  messageScreenError: string,
+  newConversationScreenError: string,
+  newConversationScreenConversationStartError: string,
+  sentForReview: string,
+  notSentForReview: string,
+  notGraded: string,
+  graded: string,
+  error: string
 }
 
 const strings: Strings = new LocalizedStrings({
-  en: require("./en.json"),
-  fi: require("./fi.json")
+  fi: require("./fi.json"),
+  en: require("./en.json")
 });
 
 export default strings;
-
